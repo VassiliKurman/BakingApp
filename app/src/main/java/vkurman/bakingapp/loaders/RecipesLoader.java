@@ -1,8 +1,8 @@
 package vkurman.bakingapp.loaders;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import java.io.IOException;
@@ -37,6 +37,7 @@ public class RecipesLoader extends AsyncTaskLoader<List<Recipe>> {
 
         try {
             String json = RecipeUtils.getJsonResponseFromWeb(url);
+            Log.d(TAG, "Recipes JSON: " + json);
             return JsonUtils.parseRecipeJson(json);
         } catch (IOException e) {
             Log.e(TAG, "");
