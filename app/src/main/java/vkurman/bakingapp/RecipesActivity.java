@@ -58,6 +58,8 @@ public class RecipesActivity extends AppCompatActivity implements LoaderManager.
         if(mAdapter == null) {
             mAdapter = new RecipesAdapter(data);
             mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.updateData(data);
         }
     }
 

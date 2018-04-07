@@ -74,4 +74,14 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
     public int getItemCount() {
         return recipes == null ? 0 : recipes.size();
     }
+
+    /**
+     * Update data in Adapter.
+     *
+     * @param recipes
+     */
+    public void updateData(List<Recipe> recipes) {
+        this.recipes = recipes;
+        notifyDataSetChanged();
+    }
 }

@@ -37,7 +37,7 @@ public class RecipesLoader extends AsyncTaskLoader<List<Recipe>> {
 
         try {
             String json = RecipeUtils.getJsonResponseFromWeb(url);
-            Log.d(TAG, "Recipes JSON: " + json);
+            Log.d(TAG, "Recipes JSON length: " + json.length());
             return JsonUtils.parseRecipeJson(json);
         } catch (IOException e) {
             Log.e(TAG, "");
