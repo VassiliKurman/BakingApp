@@ -32,5 +32,7 @@ public class RecipesActivity extends AppCompatActivity {
 
         mAdapter = new RecipesAdapter(new ArrayList<Recipe>());
         mRecyclerView.setAdapter(mAdapter);
+
+        getSupportLoaderManager().getLoader(0).forceLoad();
     }
 }
