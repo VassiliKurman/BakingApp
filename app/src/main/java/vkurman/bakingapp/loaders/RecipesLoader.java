@@ -21,7 +21,7 @@ import vkurman.bakingapp.utils.RecipeUtils;
 
 public class RecipesLoader extends AsyncTaskLoader<List<Recipe>> {
 
-    private static final String TAG = "";
+    private static final String TAG = "RecipesLoader";
 
     public RecipesLoader(@NonNull Context context) {
         super(context);
@@ -40,7 +40,7 @@ public class RecipesLoader extends AsyncTaskLoader<List<Recipe>> {
             Log.d(TAG, "Recipes JSON length: " + json.length());
             return JsonUtils.parseRecipeJson(json);
         } catch (IOException e) {
-            Log.e(TAG, "");
+            Log.e(TAG, "Exception getting response from web");
         }
 
         return null;
