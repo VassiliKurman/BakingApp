@@ -14,7 +14,8 @@ import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
 
 /**
- * JsonUtils
+ * JsonUtils parses json formatted string into specific object.
+ *
  * Created by Vassili Kurman on 07/04/2018.
  * Version 1.0
  */
@@ -52,8 +53,6 @@ public class JsonUtils {
     public static List<Recipe> parseRecipeJson(String json) {
 
         final List<Recipe> recipes = new ArrayList<>();
-
-//        Log.d(TAG, "JSON received: " + json);
 
         if (json == null || json.isEmpty()) {
             return recipes;
