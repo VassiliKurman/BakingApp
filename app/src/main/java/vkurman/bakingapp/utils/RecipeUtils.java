@@ -1,7 +1,13 @@
 package vkurman.bakingapp.utils;
 
+import android.util.Log;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Scanner;
 
 /**
  * RecipeUtils
@@ -11,13 +17,47 @@ import java.net.URL;
 
 public class RecipeUtils {
 
-    // TODO
+    private static final String TAG = "RecipeUtils";
+
+    private static final String API_BASE_URL = "http://go.udacity.com/android-baking-app-json";
+
+    /**
+     * Build and returns URL for recipes.
+     *
+     * @return URL
+     */
     public static final URL createRecipesUrl() {
+        try {
+            return new URL(API_BASE_URL);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Error building URL!");
+        }
+
         return null;
     }
 
-    // TODO
+    /**
+     * Returns response from specified URL in json format.
+     *
+     * @param url - url to specific query
+     * @return String - response from server in json format
+     * @throws IOException - throws when can't open url connection
+     */
     public static final String getJsonResponseFromWeb(URL url) throws IOException {
+        if(url != null) {
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            try {
+                InputStream in = urlConnection.getInputStream();
+                Scanner scanner = new Scanner(in);
+                scanner.useDelimiter("\\A");
+
+                if(scanner.hasNext()) {
+                    return scanner.next();
+                }
+            } finally {
+                urlConnection.disconnect();
+            }
+        }
         return null;
     }
 
