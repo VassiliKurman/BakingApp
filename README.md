@@ -10,7 +10,7 @@
 
 * Utilization of RecyclerView: app uses RecyclerView and handles recipe steps that include videos or images.
 
-* App conforms to common standards: app conforms to common standards found in the Android Nanodegree General Project Guidelines [udacity.github.io]
+* App conforms to common standards: app conforms to common standards found in the [Android Nanodegree General Project Guidelines] (http://udacity.github.io/android-nanodegree-guidelines/core.html)
 
  
 
