@@ -1,4 +1,23 @@
+/*
+* Copyright (C) 2018 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*  	http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 package vkurman.bakingapp.models;
+
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Recipe
@@ -6,7 +25,7 @@ package vkurman.bakingapp.models;
  * Version 1.0
  */
 
-public class Recipe {
+public class Recipe implements Parcelable {
 
     private int id;
     private String name;
@@ -14,6 +33,26 @@ public class Recipe {
     private Step[] steps;
     private int servings;
     private String image;
+
+    public static final Parcelable.Creator<Recipe> CREATOR
+            = new Parcelable.Creator<Recipe>() {
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
+
+    private Recipe(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        ingredients = in.createTypedArray(Ingredient.CREATOR);
+        steps = in.createTypedArray(Step.CREATOR);
+        servings = in.readInt();
+        image = in.readString();
+    }
 
     public Recipe(int id, String name, Ingredient[] ingredients, Step[] steps, int servings, String image) {
         this.id = id;
@@ -70,5 +109,20 @@ public class Recipe {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeTypedArray(ingredients, 0);
+        dest.writeTypedArray(steps, 0);
+        dest.writeInt(servings);
+        dest.writeString(image);
     }
 }

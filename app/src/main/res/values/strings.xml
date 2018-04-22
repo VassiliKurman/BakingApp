@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BakingApp</string>
+
+    <string name="default_step_description_text">Step Description goes here!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
