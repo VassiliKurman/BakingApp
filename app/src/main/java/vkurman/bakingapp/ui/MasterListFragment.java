@@ -18,7 +18,7 @@ package vkurman.bakingapp.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,9 +74,11 @@ public class MasterListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View rootView = inflater.inflate(R.layout.fragment_master_list, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_master_list, container, true);
         // Get a reference to the ListView in the master_list_view xml layout file
         ListView listView = rootView.findViewById(R.id.master_list_view);
+
+        mRecipe = ((RecipeActivity) getActivity()).getRecipe();
 
         if(mRecipe != null) {
             // Create the adapter

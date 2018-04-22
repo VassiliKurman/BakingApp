@@ -17,6 +17,7 @@
 package vkurman.bakingapp.ui;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +30,7 @@ import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
 
 /**
- *
+ * RecipeActivity
  */
 public class RecipeActivity extends AppCompatActivity implements MasterListFragment.OnItemSelectedListener {
 
@@ -56,6 +57,16 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
 
         Log.d(TAG, mRecipe.getName());
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        // TODO bellow not setting recipes in fragment
+//        MasterListFragment fragment = (MasterListFragment) fragmentManager.findFragmentById(R.id.master_list_fragment);
+//        if(fragment == null) {
+//            Log.e(TAG, "Can't get ref to MasterListFragment");
+//        } else {
+//            fragment.setRecipe(mRecipe);
+//        }
+
         // Determine if you're creating a two-pane or single-pane display
         if(findViewById(R.id.recipe_details_linear_layout) != null) {
             // This LinearLayout will only initially exist in the two-pane tablet case
@@ -63,8 +74,6 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
 
             if(savedInstanceState == null) {
                 // In two-pane mode, add initial BodyPartFragments to the screen
-                FragmentManager fragmentManager = getSupportFragmentManager();
-
                 if(mRecipe.getImage() != null) {
                     ThumbnailFragment imageFragment = new ThumbnailFragment();
                     imageFragment.setThumbnailUrl(mRecipe.getImage());
@@ -138,6 +147,15 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    /**
+     * Getter for Recipe.
+     *
+     * @return Recipe - recipe set to this activity.
+     */
+    public Recipe getRecipe() {
+        return mRecipe;
     }
 
     /**
