@@ -17,9 +17,9 @@
 package vkurman.bakingapp.ui;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +38,17 @@ import vkurman.bakingapp.models.Recipe;
  */
 public class MasterListFragment extends Fragment {
 
+    /**
+     * Tag for Log
+     */
+    private static final String TAG = "MasterListFragment";
+    /**
+     * Recipe
+     */
     private Recipe mRecipe;
-
+    /**
+     * Item click listener
+     */
     private OnItemSelectedListener mListener;
 
     /**
@@ -69,22 +78,25 @@ public class MasterListFragment extends Fragment {
         // Get a reference to the ListView in the master_list_view xml layout file
         ListView listView = rootView.findViewById(R.id.master_list_view);
 
-        // Create the adapter
-        // This adapter takes in the context and Recipe
-        MasterListAdapter mAdapter = new MasterListAdapter(getContext(), mRecipe);
+        if(mRecipe != null) {
+            // Create the adapter
+            // This adapter takes in the context and Recipe
+            MasterListAdapter mAdapter = new MasterListAdapter(getContext(), mRecipe.getSteps());
 
-        // Set the adapter on the ListView
-        listView.setAdapter(mAdapter);
+            // Set the adapter on the ListView
+            listView.setAdapter(mAdapter);
 
-        // Set a click listener on the listView and trigger the callback onItemSelected when an item is clicked
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // Trigger the callback method and pass in the position that was clicked
-                mListener.onItemSelected(position);
-            }
-        });
-
+            // Set a click listener on the listView and trigger the callback onItemSelected when an item is clicked
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    // Trigger the callback method and pass in the position that was clicked
+                    mListener.onItemSelected(position);
+                }
+            });
+        } else {
+            Log.e(TAG, "Recipes not set");
+        }
         return rootView;
     }
 

@@ -27,7 +27,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import vkurman.bakingapp.R;
-import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
 
 /**
@@ -45,12 +44,12 @@ public class MasterListAdapter extends BaseAdapter {
      * Constructor method
      *
      * @param context - app context
-     * @param recipe - selected recipe
+     * @param steps - steps for recipe
      */
-    public MasterListAdapter(Context context, Recipe recipe) {
+    public MasterListAdapter(Context context, Step[] steps) {
         mContext = context;
-        if (recipe != null) {
-            mSteps = recipe.getSteps();
+        if (steps != null) {
+            mSteps = steps;
         }
     }
 

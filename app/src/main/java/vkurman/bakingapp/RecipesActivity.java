@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 import vkurman.bakingapp.adapters.RecipesAdapter;
 import vkurman.bakingapp.loaders.RecipesLoader;
 import vkurman.bakingapp.models.Recipe;
-import vkurman.bakingapp.ui.RecipeDetailsActivity;
+import vkurman.bakingapp.ui.RecipeActivity;
 
 public class RecipesActivity extends AppCompatActivity implements
         RecipesAdapter.RecipeClickListener, LoaderManager.LoaderCallbacks<List<Recipe>> {
@@ -89,7 +89,7 @@ public class RecipesActivity extends AppCompatActivity implements
     @Override
     public void onRecipeClicked(Recipe recipe) {
         if(recipe != null) {
-            Intent intent = new Intent(RecipesActivity.this, RecipeDetailsActivity.class);
+            Intent intent = new Intent(RecipesActivity.this, RecipeActivity.class);
             intent.putExtra("recipe", recipe);
             startActivity(intent);
         } else {

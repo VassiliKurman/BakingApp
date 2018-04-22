@@ -20,6 +20,9 @@ import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import vkurman.bakingapp.R;
 import vkurman.bakingapp.models.Recipe;
@@ -30,6 +33,7 @@ import vkurman.bakingapp.models.Step;
  */
 public class RecipeActivity extends AppCompatActivity implements MasterListFragment.OnItemSelectedListener {
 
+    private static final String TAG = "RecipeActivity";
     // Variables to store the values for recipe
     private Recipe mRecipe;
 
@@ -41,8 +45,16 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mRecipe = getIntent().getParcelableExtra("recipe");
+        Intent intent = getIntent();
+        if (intent == null) {
+            closeOnError();
+        }
+
+        mRecipe = intent.getParcelableExtra("recipe");
+
+        Log.d(TAG, mRecipe.getName());
 
         // Determine if you're creating a two-pane or single-pane display
         if(findViewById(R.id.recipe_details_linear_layout) != null) {
@@ -115,5 +127,24 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
                 startActivity(intent);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Closes and displays message when error occurs
+     */
+    private void closeOnError() {
+        finish();
+        Toast.makeText(this, "Error when retrieving intent", Toast.LENGTH_SHORT).show();
     }
 }
