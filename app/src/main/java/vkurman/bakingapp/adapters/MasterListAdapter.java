@@ -17,6 +17,7 @@
 package vkurman.bakingapp.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,9 @@ import vkurman.bakingapp.models.Step;
  */
 
 public class MasterListAdapter extends BaseAdapter {
+
+    private static final String TAG = "MasterListAdapter";
+
     // Keeps track of the context and list of steps to display
     private Context mContext;
     private Step[] mSteps;
@@ -81,6 +85,8 @@ public class MasterListAdapter extends BaseAdapter {
 
         final Step step = mSteps[position];
 
+        Log.d(TAG, "Step: " + step.getShortDescription());
+
         // Get TextView's for ingredient
         ImageView imageRecipe = convertView.findViewById(R.id.iv_list_step_image);
         TextView textRecipe = convertView.findViewById(R.id.tv_list_step_text);
@@ -88,12 +94,26 @@ public class MasterListAdapter extends BaseAdapter {
         // Set the text for TextView
         final String text = step.getId() + " " + step.getShortDescription();
         textRecipe.setText(text);
-        Picasso.with(convertView.getContext())
-                .load(mSteps[position].getThumbnailURL())
-                .error(R.drawable.error_image)
-                .placeholder(R.drawable.placeholder_image)
-                .into(imageRecipe);
+
+        final String imageUrl = mSteps[position].getThumbnailURL();
+        if(imageUrl != null && !imageUrl.isEmpty()) {
+            Picasso.with(mContext)
+                    .load(imageUrl)
+                    .error(R.drawable.error_image)
+                    .placeholder(R.drawable.placeholder_image)
+                    .into(imageRecipe);
+        }
 
         return convertView;
+    }
+
+    /**
+     * Setting new array of steps.
+     *
+     * @param steps
+     */
+    public void setSteps(Step[] steps) {
+        mSteps = steps;
+        notifyDataSetChanged();
     }
 }

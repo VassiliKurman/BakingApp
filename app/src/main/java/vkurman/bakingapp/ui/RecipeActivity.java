@@ -60,12 +60,12 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         // TODO bellow not setting recipes in fragment
-//        MasterListFragment fragment = (MasterListFragment) fragmentManager.findFragmentById(R.id.master_list_fragment);
-//        if(fragment == null) {
-//            Log.e(TAG, "Can't get ref to MasterListFragment");
-//        } else {
-//            fragment.setRecipe(mRecipe);
-//        }
+        MasterListFragment fragment = (MasterListFragment) fragmentManager.findFragmentById(R.id.master_list_fragment);
+        if(fragment == null) {
+            Log.e(TAG, "Can't get ref to MasterListFragment");
+        } else {
+            fragment.setRecipe(mRecipe);
+        }
 
         // Determine if you're creating a two-pane or single-pane display
         if(findViewById(R.id.recipe_details_linear_layout) != null) {

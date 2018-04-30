@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import vkurman.bakingapp.R;
 import vkurman.bakingapp.adapters.MasterListAdapter;
@@ -51,6 +52,10 @@ public class MasterListFragment extends Fragment {
      */
     private OnItemSelectedListener mListener;
 
+    private MasterListAdapter mAdapter;
+    private ListView mListView;
+    private TextView mTextView;
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -76,20 +81,20 @@ public class MasterListFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_master_list, container, true);
         // Get a reference to the ListView in the master_list_view xml layout file
-        ListView listView = rootView.findViewById(R.id.master_list_view);
+        mListView = rootView.findViewById(R.id.master_list_view);
 
-        mRecipe = ((RecipeActivity) getActivity()).getRecipe();
+//        mRecipe = ((RecipeActivity) getActivity()).getRecipe();
 
         if(mRecipe != null) {
             // Create the adapter
             // This adapter takes in the context and Recipe
-            MasterListAdapter mAdapter = new MasterListAdapter(getContext(), mRecipe.getSteps());
+            mAdapter = new MasterListAdapter(getContext(), mRecipe.getSteps());
 
             // Set the adapter on the ListView
-            listView.setAdapter(mAdapter);
+            mListView.setAdapter(mAdapter);
 
             // Set a click listener on the listView and trigger the callback onItemSelected when an item is clicked
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                     // Trigger the callback method and pass in the position that was clicked
@@ -124,9 +129,24 @@ public class MasterListFragment extends Fragment {
     /**
      * Sets recipe for this fragment.
      *
-     * @param recipe
+     * @param recipe - current recipe
      */
     public void setRecipe(Recipe recipe) {
         mRecipe = recipe;
+        if(mAdapter != null) {
+            mAdapter.setSteps(recipe.getSteps());
+        } else {
+            mAdapter = new MasterListAdapter(getContext(), mRecipe.getSteps());
+            // Set the adapter on the ListView
+            mListView.setAdapter(mAdapter);
+            // Set a click listener on the listView and trigger the callback onItemSelected when an item is clicked
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    // Trigger the callback method and pass in the position that was clicked
+                    mListener.onItemSelected(position);
+                }
+            });
+        }
     }
 }

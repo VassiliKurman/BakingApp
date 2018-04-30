@@ -19,7 +19,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.RecipeActivity" />
-        <activity android:name=".ui.RecipeDetailsActivity"></activity>
+        <activity android:name=".ui.RecipeDetailsActivity" />
+
+        <provider
+            android:name=".provider.RecipeContentProvider"
+            android:authorities="vkurman.bakingapp"
+            android:enabled="true"
+            android:exported="true"></provider>
     </application>
 
 </manifest>
