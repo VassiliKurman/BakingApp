@@ -28,9 +28,10 @@ import vkurman.bakingapp.provider.RecipeContract.RecipeEntry;
  * Version 1.0
  */
 public class RecipeDbHelper extends SQLiteOpenHelper {
-    // The database name
+    /**
+     * The database name
+     */
     private static final String DATABASE_NAME = "recipes.db";
-
     /**
      * If the database schema changes, than the database version needs to be incremented
      */
@@ -43,7 +44,6 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
         // Create a table to hold the recipe data
         final String SQL_CREATE_RECIPES_TABLE = "CREATE TABLE " + RecipeEntry.TABLE_NAME_STEPS + " (" +
                 RecipeEntry.COLUMN_RECIPES_ID + " INTEGER PRIMARY KEY," +

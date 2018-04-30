@@ -25,15 +25,28 @@ import android.provider.BaseColumns;
  * Version 1.0
  */
 public class RecipeContract {
-    // The authority, which is how your code knows which Content Provider to access
+    /**
+     * The authority, which is how your code knows which Content Provider to access
+     */
     public static final String AUTHORITY = "vkurman.bakingapp";
-
-    // The base content URI = "content://" + <authority>
+    /**
+     * The base content URI = "content://" + <authority>
+     */
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
-    // Define the possible paths for accessing data in this contract
-    // This is the path for the "recipes" directory
+    // Defining the possible paths for accessing data in this contract
+    /**
+     * This is the path for the "recipes" directory
+     */
     public static final String PATH_RECIPES = "recipes";
+    /**
+     * This is the path for the "steps" directory
+     */
+    public static final String PATH_STEPS = "steps";
+    /**
+     * This is the path for the "ingredients" directory
+     */
+    public static final String PATH_INGREDIENTS = "ingredients";
 
     public static final long INVALID_RECIPE_ID = -1;
     public static final long INVALID_STEP_ID = -1;
@@ -42,8 +55,12 @@ public class RecipeContract {
     public static final class RecipeEntry implements BaseColumns {
 
         // TaskEntry content URI = base content URI + path
-        public static final Uri CONTENT_URI =
+        public static final Uri CONTENT_URI_RECIPES =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_RECIPES).build();
+        public static final Uri CONTENT_URI_STEPS =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_STEPS).build();
+        public static final Uri CONTENT_URI_INGREDIENTS =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_INGREDIENTS).build();
 
         // Recipes table
         public static final String TABLE_NAME_RECIPES = "recipes";
