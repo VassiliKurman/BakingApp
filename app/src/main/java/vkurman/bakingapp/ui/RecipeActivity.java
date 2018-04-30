@@ -100,8 +100,8 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
     public void onItemSelected(int position) {
         if(position == 0) {
             // TODO
-        } else if(position > 0 && position < mRecipe.getSteps().length) {
-            final Step step = mRecipe.getSteps()[position];
+        } else if(position > 0 && position <= mRecipe.getSteps().length) {
+            final Step step = mRecipe.getSteps()[position - 1];
             // Handle the two-pane case and replace existing fragments right when a new step is selected from the master list
             if (mTwoPane) {
                 // Create two=pane interaction
