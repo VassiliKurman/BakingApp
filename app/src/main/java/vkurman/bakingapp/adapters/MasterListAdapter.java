@@ -60,7 +60,7 @@ public class MasterListAdapter extends BaseAdapter {
      */
     @Override
     public int getCount() {
-        return mSteps == null ? 0 : mSteps.length;
+        return mSteps == null ? 0 : mSteps.length + 1;
     }
 
     @Override

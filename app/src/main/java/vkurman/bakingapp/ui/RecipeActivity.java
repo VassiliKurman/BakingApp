@@ -60,8 +60,7 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
             // Getting reference to FragmentManager
             final FragmentManager fragmentManager = getSupportFragmentManager();
 
-            // TODO bellow not setting recipes in fragment
-            MasterListFragment fragment = (MasterListFragment) fragmentManager.findFragmentById(R.id.master_list_fragment);
+            final MasterListFragment fragment = (MasterListFragment) fragmentManager.findFragmentById(R.id.master_list_fragment);
             if (fragment == null) {
                 Log.e(TAG, "Can't get ref to MasterListFragment");
             } else {
@@ -99,7 +98,9 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
     // Define the behavior for onItemSelected
     @Override
     public void onItemSelected(int position) {
-        if(position >= 0 && position < mRecipe.getSteps().length) {
+        if(position == 0) {
+            // TODO
+        } else if(position > 0 && position < mRecipe.getSteps().length) {
             final Step step = mRecipe.getSteps()[position];
             // Handle the two-pane case and replace existing fragments right when a new step is selected from the master list
             if (mTwoPane) {
