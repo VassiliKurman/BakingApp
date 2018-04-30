@@ -27,7 +27,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -56,7 +55,7 @@ public class RecipesActivity extends AppCompatActivity implements
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RecipesAdapter(new ArrayList<Recipe>(), this);
+        mAdapter = new RecipesAdapter(null, this);
         mRecyclerView.setAdapter(mAdapter);
 
         // Setting loaders

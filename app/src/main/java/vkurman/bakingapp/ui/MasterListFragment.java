@@ -18,6 +18,7 @@ package vkurman.bakingapp.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,11 +26,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import vkurman.bakingapp.R;
 import vkurman.bakingapp.adapters.MasterListAdapter;
 import vkurman.bakingapp.models.Recipe;
+import vkurman.bakingapp.models.Step;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,17 +45,12 @@ public class MasterListFragment extends Fragment {
      */
     private static final String TAG = "MasterListFragment";
     /**
-     * Recipe
-     */
-    private Recipe mRecipe;
-    /**
      * Item click listener
      */
     private OnItemSelectedListener mListener;
 
     private MasterListAdapter mAdapter;
     private ListView mListView;
-    private TextView mTextView;
 
     /**
      * This interface must be implemented by activities that contain this
@@ -67,7 +63,6 @@ public class MasterListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnItemSelectedListener {
-        // TODO: Update argument type and name
         void onItemSelected(int position);
     }
 
@@ -76,34 +71,19 @@ public class MasterListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_master_list, container, true);
         // Get a reference to the ListView in the master_list_view xml layout file
         mListView = rootView.findViewById(R.id.master_list_view);
 
-//        mRecipe = ((RecipeActivity) getActivity()).getRecipe();
+        // This fragment is a static fragment and it is created before parent activity,
+        // therefore recipes not set
+        mAdapter = new MasterListAdapter(getContext(), null);
+        // Set the adapter on the ListView
+        mListView.setAdapter(mAdapter);
 
-        if(mRecipe != null) {
-            // Create the adapter
-            // This adapter takes in the context and Recipe
-            mAdapter = new MasterListAdapter(getContext(), mRecipe.getSteps());
-
-            // Set the adapter on the ListView
-            mListView.setAdapter(mAdapter);
-
-            // Set a click listener on the listView and trigger the callback onItemSelected when an item is clicked
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    // Trigger the callback method and pass in the position that was clicked
-                    mListener.onItemSelected(position);
-                }
-            });
-        } else {
-            Log.e(TAG, "Recipes not set");
-        }
         return rootView;
     }
 
@@ -132,21 +112,23 @@ public class MasterListFragment extends Fragment {
      * @param recipe - current recipe
      */
     public void setRecipe(Recipe recipe) {
-        mRecipe = recipe;
         if(mAdapter != null) {
             mAdapter.setSteps(recipe.getSteps());
         } else {
-            mAdapter = new MasterListAdapter(getContext(), mRecipe.getSteps());
+            for(Step step : recipe.getSteps()) {
+                Log.d(TAG, "Step: " + step.getShortDescription());
+            }
+            mAdapter = new MasterListAdapter(getContext(), recipe.getSteps());
             // Set the adapter on the ListView
             mListView.setAdapter(mAdapter);
-            // Set a click listener on the listView and trigger the callback onItemSelected when an item is clicked
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    // Trigger the callback method and pass in the position that was clicked
-                    mListener.onItemSelected(position);
-                }
-            });
         }
+        // Set a click listener on the listView and trigger the callback onItemSelected when an item is clicked
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // Trigger the callback method and pass in the position that was clicked
+                mListener.onItemSelected(position);
+            }
+        });
     }
 }

@@ -9,20 +9,14 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.-->
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent" >
-    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context="vkurman.bakingapp.ui.MasterListFragment"
-        android:id="@+id/master_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:gravity="center"
-        android:padding="@dimen/default_padding"
-        android:verticalSpacing="@dimen/default_vertical_spacing" >
 
-    </ListView>
-</ScrollView>
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="vkurman.bakingapp.ui.MasterListFragment"
+    android:id="@+id/master_list_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:adjustViewBounds="true"
+    android:gravity="center"
+    android:padding="@dimen/default_padding" >
+</ListView>

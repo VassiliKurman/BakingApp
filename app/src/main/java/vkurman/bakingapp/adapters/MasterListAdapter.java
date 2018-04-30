@@ -25,7 +25,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.amulyakhare.textdrawable.TextDrawable;
 
 import vkurman.bakingapp.R;
 import vkurman.bakingapp.models.Step;
@@ -35,7 +35,6 @@ import vkurman.bakingapp.models.Step;
  * Created by Vassili Kurman on 20/04/2018.
  * Version 1.0
  */
-
 public class MasterListAdapter extends BaseAdapter {
 
     private static final String TAG = "MasterListAdapter";
@@ -52,9 +51,8 @@ public class MasterListAdapter extends BaseAdapter {
      */
     public MasterListAdapter(Context context, Step[] steps) {
         mContext = context;
-        if (steps != null) {
+        if (steps != null)
             mSteps = steps;
-        }
     }
 
     /**
@@ -62,7 +60,7 @@ public class MasterListAdapter extends BaseAdapter {
      */
     @Override
     public int getCount() {
-        return mSteps.length;
+        return mSteps == null ? 0 : mSteps.length;
     }
 
     @Override
@@ -83,34 +81,39 @@ public class MasterListAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_step_layout, parent, false);
         }
 
-        final Step step = mSteps[position];
+        if (position == 0) {
+            Log.d(TAG, "Ingredients");
 
-        Log.d(TAG, "Step: " + step.getShortDescription());
+            // Get TextView's for ingredient
+            ImageView imageRecipe = convertView.findViewById(R.id.iv_list_step_image);
+            TextView textRecipe = convertView.findViewById(R.id.tv_list_step_text);
 
-        // Get TextView's for ingredient
-        ImageView imageRecipe = convertView.findViewById(R.id.iv_list_step_image);
-        TextView textRecipe = convertView.findViewById(R.id.tv_list_step_text);
+            // Set the text for TextView
+            textRecipe.setText(R.string.text_Ingredients);
 
-        // Set the text for TextView
-        final String text = step.getId() + " " + step.getShortDescription();
-        textRecipe.setText(text);
+            imageRecipe.setImageResource(R.drawable.ic_ingredients);
+        } else {
+            final Step step = mSteps[position - 1];
 
-        final String imageUrl = mSteps[position].getThumbnailURL();
-        if(imageUrl != null && !imageUrl.isEmpty()) {
-            Picasso.with(mContext)
-                    .load(imageUrl)
-                    .error(R.drawable.error_image)
-                    .placeholder(R.drawable.placeholder_image)
-                    .into(imageRecipe);
+            Log.d(TAG, "Step: " + step.getShortDescription());
+
+            // Get TextView's for ingredient
+            ImageView imageRecipe = convertView.findViewById(R.id.iv_list_step_image);
+            TextView textRecipe = convertView.findViewById(R.id.tv_list_step_text);
+
+            // Set the text for TextView
+            textRecipe.setText(step.getShortDescription());
+            TextDrawable drawable = TextDrawable.builder()
+                    .buildRound(Integer.toString(step.getId()), R.color.colorAccent);
+            imageRecipe.setImageDrawable(drawable);
         }
-
         return convertView;
     }
 
     /**
      * Setting new array of steps.
      *
-     * @param steps
+     * @param steps - array of steps
      */
     public void setSteps(Step[] steps) {
         mSteps = steps;

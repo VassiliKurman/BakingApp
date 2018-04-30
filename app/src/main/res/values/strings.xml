@@ -3,7 +3,6 @@
 
     <string name="default_step_description_text">Step Description goes here!</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="description_step_image">Step Image</string>
+    <string name="text_Ingredients">Ingredients</string>
 </resources>

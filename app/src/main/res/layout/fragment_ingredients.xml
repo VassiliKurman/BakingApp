@@ -17,8 +17,5 @@
     android:layout_height="wrap_content"
     android:adjustViewBounds="true"
     android:gravity="center"
-    android:padding="@dimen/default_padding"
-    android:verticalSpacing="@dimen/default_vertical_spacing"
     tools:context="vkurman.bakingapp.ui.IngredientsFragment">
-
 </ListView>

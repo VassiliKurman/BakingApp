@@ -17,7 +17,6 @@
 package vkurman.bakingapp.ui;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,49 +47,52 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
         setContentView(R.layout.activity_recipe);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
         }
 
         mRecipe = intent.getParcelableExtra("recipe");
+        if(mRecipe != null) {
+            // Setting title for title bar
+            getSupportActionBar().setTitle(mRecipe.getName());
+            // Getting reference to FragmentManager
+            final FragmentManager fragmentManager = getSupportFragmentManager();
 
-        Log.d(TAG, mRecipe.getName());
+            // TODO bellow not setting recipes in fragment
+            MasterListFragment fragment = (MasterListFragment) fragmentManager.findFragmentById(R.id.master_list_fragment);
+            if (fragment == null) {
+                Log.e(TAG, "Can't get ref to MasterListFragment");
+            } else {
+                fragment.setRecipe(mRecipe);
+            }
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+            // Determine if you're creating a two-pane or single-pane display
+            if (findViewById(R.id.recipe_details_linear_layout) != null) {
+                // This LinearLayout will only initially exist in the two-pane tablet case
+                mTwoPane = true;
 
-        // TODO bellow not setting recipes in fragment
-        MasterListFragment fragment = (MasterListFragment) fragmentManager.findFragmentById(R.id.master_list_fragment);
-        if(fragment == null) {
-            Log.e(TAG, "Can't get ref to MasterListFragment");
-        } else {
-            fragment.setRecipe(mRecipe);
-        }
+                if (savedInstanceState == null) {
+                    // In two-pane mode, add initial BodyPartFragments to the screen
+                    if (mRecipe.getImage() != null) {
+                        ThumbnailFragment imageFragment = new ThumbnailFragment();
+                        imageFragment.setThumbnailUrl(mRecipe.getImage());
+                        fragmentManager.beginTransaction()
+                                .add(R.id.video_container, imageFragment)
+                                .commit();
+                    }
 
-        // Determine if you're creating a two-pane or single-pane display
-        if(findViewById(R.id.recipe_details_linear_layout) != null) {
-            // This LinearLayout will only initially exist in the two-pane tablet case
-            mTwoPane = true;
-
-            if(savedInstanceState == null) {
-                // In two-pane mode, add initial BodyPartFragments to the screen
-                if(mRecipe.getImage() != null) {
-                    ThumbnailFragment imageFragment = new ThumbnailFragment();
-                    imageFragment.setThumbnailUrl(mRecipe.getImage());
+                    IngredientsFragment ingredientsFragment = new IngredientsFragment();
+                    ingredientsFragment.setIngredients(mRecipe.getIngredients());
                     fragmentManager.beginTransaction()
-                            .add(R.id.video_container, imageFragment)
+                            .add(R.id.recipe_step_container, ingredientsFragment)
                             .commit();
                 }
-
-                IngredientsFragment ingredientsFragment = new IngredientsFragment();
-                ingredientsFragment.setIngredients(mRecipe.getIngredients());
-                fragmentManager.beginTransaction()
-                        .add(R.id.recipe_step_container, ingredientsFragment)
-                        .commit();
+            } else {
+                // We're in single-pane mode and displaying fragments on a phone in separate activities
+                mTwoPane = false;
             }
-        } else {
-            // We're in single-pane mode and displaying fragments on a phone in separate activities
-            mTwoPane = false;
         }
     }
 

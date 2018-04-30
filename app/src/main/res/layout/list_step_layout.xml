@@ -10,9 +10,8 @@
  See the License for the specific language governing permissions and
  limitations under the License.-->
 
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,18 +19,17 @@
 
     <ImageView
         android:id="@+id/iv_list_step_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="parent"
+        android:layout_width="@dimen/default_text_image_size"
+        android:layout_height="@dimen/default_text_image_size"
         android:contentDescription="@string/description_step_image" />
 
     <TextView
         android:id="@+id/tv_list_step_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@id/iv_list_step_image"
-        app:layout_constraintTop_toTopOf="@id/iv_list_step_image"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="@dimen/default_padding_between_image_text"
+        android:paddingRight="@dimen/default_padding_horizontal"
         tools:text="Step short description"/>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

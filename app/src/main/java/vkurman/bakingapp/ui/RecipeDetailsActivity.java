@@ -19,6 +19,7 @@ package vkurman.bakingapp.ui;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import vkurman.bakingapp.R;
 import vkurman.bakingapp.models.Ingredient;
@@ -32,6 +33,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Step details");
 
         step = getIntent().getParcelableExtra("step");
 
@@ -57,5 +61,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .add(R.id.recipe_step_container, stepFragment)
                 .commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
