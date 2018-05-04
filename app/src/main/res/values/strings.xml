@@ -5,4 +5,5 @@
 
     <string name="description_step_image">Step Image</string>
     <string name="text_Ingredients">Ingredients</string>
+    <string name="text_servings">Servings:</string>
 </resources>

@@ -55,7 +55,7 @@ public class RecipesActivity extends AppCompatActivity implements
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new RecipesAdapter(null, this);
+        mAdapter = new RecipesAdapter(this, null, this);
         mRecyclerView.setAdapter(mAdapter);
 
         // Setting loaders
@@ -75,7 +75,7 @@ public class RecipesActivity extends AppCompatActivity implements
         }
 
         if(mAdapter == null) {
-            mAdapter = new RecipesAdapter(data, this);
+            mAdapter = new RecipesAdapter(this, data, this);
             mRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.updateData(data);

@@ -22,7 +22,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -37,6 +40,10 @@ import vkurman.bakingapp.models.Recipe;
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesViewHolder> {
 
+    /**
+     *
+     */
+    final private Context mContext;
     /**
      * An on-click handler that allows for an Activity to interface with RecyclerView
      */
@@ -56,10 +63,12 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
     /**
      * Constructor for RecipesAdapter
      *
+     * @param context - context
      * @param recipes - list of recipes
      * @param recipeClickListener - item click listener
      */
-    public RecipesAdapter(List<Recipe> recipes, RecipeClickListener recipeClickListener) {
+    public RecipesAdapter(Context context, List<Recipe> recipes, RecipeClickListener recipeClickListener) {
+        this.mContext = context;
         this.recipes = recipes;
         mRecipeClickListener = recipeClickListener;
     }
@@ -69,12 +78,17 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
      */
     class RecipesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
-        TextView mContent;
+        ImageView mRecipeImage;
+        TextView mServings;
+        TextView mRecipeName;
 
         RecipesViewHolder(View view) {
             super(view);
 
-            mContent = view.findViewById(R.id.tv_list_recipe_text);
+            mRecipeImage = view.findViewById(R.id.iv_list_recipe_image);
+            mRecipeName = view.findViewById(R.id.tv_list_recipe_text);
+            mServings = view.findViewById(R.id.tv_list_servings_text);
+
             view.setOnClickListener(this);
         }
 
@@ -121,7 +135,13 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
                 return;
             }
 
-            holder.mContent.setText(recipe.getName());
+            holder.mRecipeName.setText(recipe.getName());
+            holder.mServings.setText("Servings: " + recipe.getServings());
+            Picasso.with(mContext)
+                    .load(recipe.getImage().isEmpty() ? null : recipe.getImage())
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.error_image)
+                    .into(holder.mRecipeImage);
         }
     }
 
