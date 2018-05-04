@@ -136,7 +136,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
             }
 
             holder.mRecipeName.setText(recipe.getName());
-            holder.mServings.setText("Servings: " + recipe.getServings());
+            holder.mServings.setText(String.format("Servings: %d", recipe.getServings()));
             Picasso.with(mContext)
                     .load(recipe.getImage().isEmpty() ? null : recipe.getImage())
                     .placeholder(R.drawable.placeholder_image)

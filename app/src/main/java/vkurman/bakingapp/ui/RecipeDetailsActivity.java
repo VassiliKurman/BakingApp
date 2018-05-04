@@ -22,12 +22,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import vkurman.bakingapp.R;
-import vkurman.bakingapp.models.Ingredient;
 import vkurman.bakingapp.models.Step;
 
+/**
+ * RecipeDetailsActivity displays details about ingredients or selected step in recipe.
+ */
 public class RecipeDetailsActivity extends AppCompatActivity {
-
-    private Step step;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,24 +37,24 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Step details");
 
-        step = getIntent().getParcelableExtra("step");
+        Step step = getIntent().getParcelableExtra("step");
 
         // Add the fragment to its container using a FragmentManager and a Transaction
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-//        if(step.getVideoURL() != null) {
-//            MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
-//            mediaPlayerFragment.setVideoUrl(step.getVideoURL());
-//            fragmentManager.beginTransaction()
-//                    .add(R.id.video_container, mediaPlayerFragment)
-//                    .commit();
-//        } else if(step.getThumbnailURL() != null) {
-//            ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
-//            thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
-//            fragmentManager.beginTransaction()
-//                    .add(R.id.video_container, thumbnailFragment)
-//                    .commit();
-//        }
+        if(step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
+            MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
+            mediaPlayerFragment.setVideoUrl(step.getVideoURL());
+            fragmentManager.beginTransaction()
+                    .add(R.id.video_container, mediaPlayerFragment)
+                    .commit();
+        } else if(step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
+            ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
+            thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
+            fragmentManager.beginTransaction()
+                    .add(R.id.video_container, thumbnailFragment)
+                    .commit();
+        }
 
         StepInstructionsFragment stepFragment = new StepInstructionsFragment();
         stepFragment.setStep(step);

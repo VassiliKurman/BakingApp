@@ -55,7 +55,7 @@ public class ThumbnailFragment extends Fragment {
 
         // Set the image resource to the list item at the stored index
         Picasso.with(this.getContext())
-                .load(mThumbnailUrl)
+                .load(mThumbnailUrl.isEmpty() ? null : mThumbnailUrl)
                 .error(R.drawable.error_image)
                 .placeholder(R.drawable.placeholder_image)
                 .into(imageView);
