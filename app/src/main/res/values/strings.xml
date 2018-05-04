@@ -6,4 +6,6 @@
     <string name="description_step_image">Step Image</string>
     <string name="text_Ingredients">Ingredients</string>
     <string name="text_servings">Servings:</string>
+    <string name="text_play_video">Play video</string>
+    <string name="text_pause_video">Pause video</string>
 </resources>
