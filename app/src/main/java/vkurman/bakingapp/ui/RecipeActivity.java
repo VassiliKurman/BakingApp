@@ -192,8 +192,6 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
                     for(Ingredient ing : mRecipe.getIngredients()) {
                         Log.d(TAG, ing.getIngredient() + " " + ing.getQuantity() + ing.getMeasure());
                     }
-//                    b.putParcelableArray("ingredients", mRecipe.getIngredients());
-                    // TODO clear temp fix
                     b.putParcelable("recipe", mRecipe);
 
                     Log.d(TAG, "Ingredients passed to RecipeDetailsActivity");

@@ -14,6 +14,5 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/playerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="0dp"
+        android:layout_height="wrap_content"
         tools:context="vkurman.bakingapp.ui.MediaPlayerFragment" />

@@ -40,7 +40,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_details);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Step details");
+        getSupportActionBar().setTitle(R.string.title_details_activity);
 
         Step step = getIntent().getParcelableExtra("step");
 
@@ -68,8 +68,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     .add(R.id.recipe_step_container, stepFragment)
                     .commit();
         } else {
-//            Ingredient[] ingredients = getIntent().getParcelableArrayExtra("ingredients");
-
             Recipe recipe = getIntent().getParcelableExtra("recipe");
             if(recipe == null) {
                 Log.e(TAG, "Recipe not passed!");
