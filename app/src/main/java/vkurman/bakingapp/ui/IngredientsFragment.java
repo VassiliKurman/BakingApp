@@ -22,10 +22,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import vkurman.bakingapp.R;
-import vkurman.bakingapp.adapters.IngredientsListAdapter;
 import vkurman.bakingapp.models.Ingredient;
 
 /**
@@ -33,8 +35,22 @@ import vkurman.bakingapp.models.Ingredient;
  */
 public class IngredientsFragment extends Fragment {
 
-    private Ingredient[] mIngredients;
+    /**
+     * Key for ingredients
+     */
+    private static final String INGREDIENTS_KEY = "ingredients";
+    /**
+     * Ingredients
+     */
+    private Ingredient[] mIngredientsArray;
+    private String mIngredientsString;
+    private Unbinder mUnbinder;
+    @BindView(R.id.tv_ingredients)
+    TextView mIngredientsTextView;
 
+    /**
+     * Empty constructor
+     */
     public IngredientsFragment() {
         // Required empty public constructor
     }
@@ -42,23 +58,31 @@ public class IngredientsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Load the saved state (the Parcelable ingredients) if there is one
-//        if(savedInstanceState != null) {
-//            mIngredients = savedInstanceState.getParcelable("ingredients");
-//        }
+        final View rootView = inflater.inflate(R.layout.fragment_ingredients, container, false);
 
-        final View rootView = inflater.inflate(R.layout.fragment_master_list, container, false);
+        mUnbinder = ButterKnife.bind(this, rootView);
 
-        // Get a reference to the ListView in the fragment_master_list xml layout file
-        ListView listView = rootView.findViewById(R.id.ingredients_list_view);
+        if (savedInstanceState == null) {
+            if(mIngredientsArray != null){
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < mIngredientsArray.length; i++) {
+                    Ingredient ingredient = mIngredientsArray[i];
+                    String ing = String.format("%s %d%s",
+                            ingredient.getIngredient(),
+                            ingredient.getQuantity(),
+                            ingredient.getMeasure());
+                    sb.append(ing);
+                    if(i != mIngredientsArray.length - 1) {
+                        sb.append("\n");
+                    }
+                    mIngredientsString = sb.toString();
+                }
+            }
 
-        // Create the adapter
-        // This adapter takes in the context and an ArrayList of ALL the image resources to display
-        IngredientsListAdapter mAdapter = new IngredientsListAdapter(getContext(), mIngredients);
-
-        // Set the adapter on the GridView
-        listView.setAdapter(mAdapter);
-
+        } else {
+            mIngredientsString = (savedInstanceState.getString(INGREDIENTS_KEY));
+        }
+        mIngredientsTextView.setText(mIngredientsString);
         // Return the root view
         return rootView;
     }
@@ -69,14 +93,17 @@ public class IngredientsFragment extends Fragment {
      * @param ingredients - provided ingredients
      */
     public void setIngredients(Ingredient[] ingredients) {
-        mIngredients = ingredients;
+        mIngredientsArray = ingredients;
     }
 
-//    /**
-//     * Save the current state of this fragment
-//     */
-//    @Override
-//    public void onSaveInstanceState(@NonNull Bundle currentState) {
-//        currentState.putParcelableArray("ingredients", mIngredients);
-//    }
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle currentState) {
+        currentState.putString(INGREDIENTS_KEY, mIngredientsString);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mUnbinder.unbind();
+    }
 }

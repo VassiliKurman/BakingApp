@@ -78,6 +78,7 @@ public class MasterListAdapter extends BaseAdapter {
      */
     public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
+            // TODO inflate layout for ingredients in the master list
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_step_layout, parent, false);
         }
 
@@ -104,7 +105,7 @@ public class MasterListAdapter extends BaseAdapter {
             // Set the text for TextView
             textRecipe.setText(step.getShortDescription());
             TextDrawable drawable = TextDrawable.builder()
-                    .buildRound(Integer.toString(step.getId()), R.color.colorAccent);
+                    .buildRound(Integer.toString(step.getId()), R.color.colorPrimary);
             imageRecipe.setImageDrawable(drawable);
         }
         return convertView;

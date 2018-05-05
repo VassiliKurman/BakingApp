@@ -43,7 +43,7 @@ public class IngredientsListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mIngredients.length;
+        return mIngredients == null ? 0 : mIngredients.length;
     }
 
     @Override
@@ -57,12 +57,15 @@ public class IngredientsListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int position, View view, ViewGroup viewGroup) {
         if (view == null) {
             view = LayoutInflater.from(mContext).inflate(R.layout.list_ingredient_layout, viewGroup, false);
         }
 
-        final Ingredient ingredient = mIngredients[i];
+        final Ingredient ingredient = mIngredients[position];
+
+        if(ingredient == null)
+            return view;
 
         // Get TextView's for ingredient
         TextView textIngredient = view.findViewById(R.id.tv_list_ingredient_ingredient);
@@ -71,9 +74,19 @@ public class IngredientsListAdapter extends BaseAdapter {
 
         // Set the text for TextView's
         textIngredient.setText(ingredient.getIngredient());
-        textQuantity.setText(ingredient.getQuantity());
+        textQuantity.setText(String.valueOf(ingredient.getQuantity()));
         textMeasure.setText(ingredient.getMeasure());
 
         return view;
+    }
+
+    /**
+     * Sets new ingredients for adapter.
+     *
+     * @param ingredients - array of ingredients
+     */
+    public void setIngredients(Ingredient[] ingredients) {
+        mIngredients = ingredients;
+        notifyDataSetChanged();
     }
 }

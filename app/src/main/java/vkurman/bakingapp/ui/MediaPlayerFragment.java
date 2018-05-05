@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -159,4 +158,24 @@ public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventList
 
     @Override
     public void onPositionDiscontinuity() {}
+
+//    /**
+//     * Media Session Callbacks, where all external clients control the player.
+//     */
+//    private class MySessionCallback extends MediaSessionCompat.Callback {
+//        @Override
+//        public void onPlay() {
+//            mExoPlayer.setPlayWhenReady(true);
+//        }
+//
+//        @Override
+//        public void onPause() {
+//            mExoPlayer.setPlayWhenReady(false);
+//        }
+//
+//        @Override
+//        public void onSkipToPrevious() {
+//            mExoPlayer.seekTo(0);
+//        }
+//    }
 }

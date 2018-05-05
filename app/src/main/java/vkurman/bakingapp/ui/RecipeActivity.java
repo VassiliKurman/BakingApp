@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import vkurman.bakingapp.R;
+import vkurman.bakingapp.models.Ingredient;
 import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
 
@@ -78,7 +79,7 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
                         ThumbnailFragment imageFragment = new ThumbnailFragment();
                         imageFragment.setThumbnailUrl(mRecipe.getImage());
                         fragmentManager.beginTransaction()
-                                .add(R.id.video_container, imageFragment)
+                                .add(R.id.media_container, imageFragment)
                                 .commit();
                     }
 
@@ -98,40 +99,108 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
     // Define the behavior for onItemSelected
     @Override
     public void onItemSelected(int position) {
-        if(position == 0) {
-            // TODO
-        } else if(position > 0 && position <= mRecipe.getSteps().length) {
-            final Step step = mRecipe.getSteps()[position - 1];
+//        if(position == 0) {
+//            // TODO
+//
+//        } else if(position > 0 && position <= mRecipe.getSteps().length) {
+//            final Step step = mRecipe.getSteps()[position - 1];
+//            // Handle the two-pane case and replace existing fragments right when a new step is selected from the master list
+//            if (mTwoPane) {
+//                // Create two=pane interaction
+//                // Add the fragment to its container using a FragmentManager and a Transaction
+//                FragmentManager fragmentManager = getSupportFragmentManager();
+//
+//                if(step.getVideoURL() != null) {
+//                    MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
+//                    mediaPlayerFragment.setVideoUrl(step.getVideoURL());
+//                    fragmentManager.beginTransaction()
+//                            .add(R.id.video_container, mediaPlayerFragment)
+//                            .commit();
+//                } else if(step.getThumbnailURL() != null) {
+//                    ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
+//                    thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
+//                    fragmentManager.beginTransaction()
+//                            .add(R.id.video_container, thumbnailFragment)
+//                            .commit();
+//                }
+//
+//                StepInstructionsFragment stepFragment = new StepInstructionsFragment();
+//                stepFragment.setStep(step);
+//                fragmentManager.beginTransaction()
+//                        .add(R.id.recipe_step_container, stepFragment)
+//                        .commit();
+//            } else {
+//                // Handle the single-pane phone case by passing information in a Bundle attached to an Intent
+//                // Put this information in a Bundle and attach it to an Intent that will launch an Activity
+//                Bundle b = new Bundle();
+//                if (position == 0) {
+//                    b.putParcelableArray("ingredients", mRecipe.getIngredients());
+//                    Log.d(TAG, "Ingredients passed to RecipeDetailsActivity");
+//                } else {
+//                    b.putParcelable("step", step);
+//                    Log.d(TAG, "Step passed to RecipeDetailsActivity");
+//                }
+//
+//                // Attach the Bundle to an intent
+//                final Intent intent = new Intent(this, RecipeDetailsActivity.class);
+//                intent.putExtras(b);
+//                startActivity(intent);
+//            }
+//        }
+
+        if(position >= 0 && position <= mRecipe.getSteps().length) {
             // Handle the two-pane case and replace existing fragments right when a new step is selected from the master list
             if (mTwoPane) {
                 // Create two=pane interaction
                 // Add the fragment to its container using a FragmentManager and a Transaction
                 FragmentManager fragmentManager = getSupportFragmentManager();
 
-                if(step.getVideoURL() != null) {
-                    MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
-                    mediaPlayerFragment.setVideoUrl(step.getVideoURL());
+                if(position == 0) {
+                    IngredientsFragment ingredientsFragment = new IngredientsFragment();
+                    ingredientsFragment.setIngredients(mRecipe.getIngredients());
                     fragmentManager.beginTransaction()
-                            .add(R.id.video_container, mediaPlayerFragment)
+                            .add(R.id.recipe_step_container, ingredientsFragment)
                             .commit();
-                } else if(step.getThumbnailURL() != null) {
-                    ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
-                    thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
+                } else {
+                    final Step step = mRecipe.getSteps()[position - 1];
+
+                    if (step.getVideoURL() != null) {
+                        MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
+                        mediaPlayerFragment.setVideoUrl(step.getVideoURL());
+                        fragmentManager.beginTransaction()
+                                .add(R.id.media_container, mediaPlayerFragment)
+                                .commit();
+                    } else if (step.getThumbnailURL() != null) {
+                        ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
+                        thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
+                        fragmentManager.beginTransaction()
+                                .add(R.id.media_container, thumbnailFragment)
+                                .commit();
+                    }
+
+                    StepInstructionsFragment stepFragment = new StepInstructionsFragment();
+                    stepFragment.setStep(step);
                     fragmentManager.beginTransaction()
-                            .add(R.id.video_container, thumbnailFragment)
+                            .add(R.id.recipe_step_container, stepFragment)
                             .commit();
                 }
-
-                StepInstructionsFragment stepFragment = new StepInstructionsFragment();
-                stepFragment.setStep(step);
-                fragmentManager.beginTransaction()
-                        .add(R.id.recipe_step_container, stepFragment)
-                        .commit();
             } else {
                 // Handle the single-pane phone case by passing information in a Bundle attached to an Intent
                 // Put this information in a Bundle and attach it to an Intent that will launch an Activity
                 Bundle b = new Bundle();
-                b.putParcelable("step", step);
+                if (position == 0) {
+                    for(Ingredient ing : mRecipe.getIngredients()) {
+                        Log.d(TAG, ing.getIngredient() + " " + ing.getQuantity() + ing.getMeasure());
+                    }
+//                    b.putParcelableArray("ingredients", mRecipe.getIngredients());
+                    // TODO clear temp fix
+                    b.putParcelable("recipe", mRecipe);
+
+                    Log.d(TAG, "Ingredients passed to RecipeDetailsActivity");
+                } else {
+                    b.putParcelable("step", mRecipe.getSteps()[position - 1]);
+                    Log.d(TAG, "Step passed to RecipeDetailsActivity");
+                }
 
                 // Attach the Bundle to an intent
                 final Intent intent = new Intent(this, RecipeDetailsActivity.class);

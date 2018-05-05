@@ -19,15 +19,20 @@ package vkurman.bakingapp.ui;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import vkurman.bakingapp.R;
+import vkurman.bakingapp.models.Ingredient;
+import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
 
 /**
  * RecipeDetailsActivity displays details about ingredients or selected step in recipe.
  */
 public class RecipeDetailsActivity extends AppCompatActivity {
+
+    private static final String TAG = "RecipeDetailsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,25 +47,43 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         // Add the fragment to its container using a FragmentManager and a Transaction
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        if(step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
-            MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
-            mediaPlayerFragment.setVideoUrl(step.getVideoURL());
-            fragmentManager.beginTransaction()
-                    .add(R.id.video_container, mediaPlayerFragment)
-                    .commit();
-        } else if(step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
-            ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
-            thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
-            fragmentManager.beginTransaction()
-                    .add(R.id.video_container, thumbnailFragment)
-                    .commit();
-        }
+        if(step != null) {
+            if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
+                MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
+                mediaPlayerFragment.setVideoUrl(step.getVideoURL());
+                fragmentManager.beginTransaction()
+                        .add(R.id.media_container, mediaPlayerFragment)
+                        .commit();
+            } else if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
+                ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
+                thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
+                fragmentManager.beginTransaction()
+                        .add(R.id.media_container, thumbnailFragment)
+                        .commit();
+            }
 
-        StepInstructionsFragment stepFragment = new StepInstructionsFragment();
-        stepFragment.setStep(step);
-        fragmentManager.beginTransaction()
-                .add(R.id.recipe_step_container, stepFragment)
-                .commit();
+            StepInstructionsFragment stepFragment = new StepInstructionsFragment();
+            stepFragment.setStep(step);
+            fragmentManager.beginTransaction()
+                    .add(R.id.recipe_step_container, stepFragment)
+                    .commit();
+        } else {
+//            Ingredient[] ingredients = getIntent().getParcelableArrayExtra("ingredients");
+
+            Recipe recipe = getIntent().getParcelableExtra("recipe");
+            if(recipe == null) {
+                Log.e(TAG, "Recipe not passed!");
+                return;
+            }
+            Ingredient[] ingredients = recipe.getIngredients();
+            if (ingredients != null) {
+                IngredientsFragment ingredientsFragment = new IngredientsFragment();
+                ingredientsFragment.setIngredients(ingredients);
+                fragmentManager.beginTransaction()
+                        .add(R.id.recipe_step_container, ingredientsFragment)
+                        .commit();
+            }
+        }
     }
 
     @Override
