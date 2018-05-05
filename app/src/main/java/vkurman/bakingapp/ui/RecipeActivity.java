@@ -99,55 +99,6 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
     // Define the behavior for onItemSelected
     @Override
     public void onItemSelected(int position) {
-//        if(position == 0) {
-//            // TODO
-//
-//        } else if(position > 0 && position <= mRecipe.getSteps().length) {
-//            final Step step = mRecipe.getSteps()[position - 1];
-//            // Handle the two-pane case and replace existing fragments right when a new step is selected from the master list
-//            if (mTwoPane) {
-//                // Create two=pane interaction
-//                // Add the fragment to its container using a FragmentManager and a Transaction
-//                FragmentManager fragmentManager = getSupportFragmentManager();
-//
-//                if(step.getVideoURL() != null) {
-//                    MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
-//                    mediaPlayerFragment.setVideoUrl(step.getVideoURL());
-//                    fragmentManager.beginTransaction()
-//                            .add(R.id.video_container, mediaPlayerFragment)
-//                            .commit();
-//                } else if(step.getThumbnailURL() != null) {
-//                    ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
-//                    thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
-//                    fragmentManager.beginTransaction()
-//                            .add(R.id.video_container, thumbnailFragment)
-//                            .commit();
-//                }
-//
-//                StepInstructionsFragment stepFragment = new StepInstructionsFragment();
-//                stepFragment.setStep(step);
-//                fragmentManager.beginTransaction()
-//                        .add(R.id.recipe_step_container, stepFragment)
-//                        .commit();
-//            } else {
-//                // Handle the single-pane phone case by passing information in a Bundle attached to an Intent
-//                // Put this information in a Bundle and attach it to an Intent that will launch an Activity
-//                Bundle b = new Bundle();
-//                if (position == 0) {
-//                    b.putParcelableArray("ingredients", mRecipe.getIngredients());
-//                    Log.d(TAG, "Ingredients passed to RecipeDetailsActivity");
-//                } else {
-//                    b.putParcelable("step", step);
-//                    Log.d(TAG, "Step passed to RecipeDetailsActivity");
-//                }
-//
-//                // Attach the Bundle to an intent
-//                final Intent intent = new Intent(this, RecipeDetailsActivity.class);
-//                intent.putExtras(b);
-//                startActivity(intent);
-//            }
-//        }
-
         if(position >= 0 && position <= mRecipe.getSteps().length) {
             // Handle the two-pane case and replace existing fragments right when a new step is selected from the master list
             if (mTwoPane) {
