@@ -28,6 +28,7 @@ import vkurman.bakingapp.R;
 import vkurman.bakingapp.models.Ingredient;
 import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
+import vkurman.bakingapp.utils.BakingAppConstants;
 
 /**
  * RecipeActivity
@@ -140,17 +141,13 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
                 // Put this information in a Bundle and attach it to an Intent that will launch an Activity
                 Bundle b = new Bundle();
                 if (position == 0) {
-                    for(Ingredient ing : mRecipe.getIngredients()) {
-                        Log.d(TAG, ing.getIngredient() + " " + ing.getQuantity() + ing.getMeasure());
-                    }
-                    b.putParcelable("recipe", mRecipe);
-
+                    b.putInt(BakingAppConstants.INTENT_NAME_FOR_STEP_ID, -1);
                     Log.d(TAG, "Ingredients passed to RecipeDetailsActivity");
                 } else {
-                    b.putParcelable("step", mRecipe.getSteps()[position - 1]);
+                    b.putInt(BakingAppConstants.INTENT_NAME_FOR_STEP_ID, mRecipe.getSteps()[position - 1].getId());
                     Log.d(TAG, "Step passed to RecipeDetailsActivity");
                 }
-
+                b.putParcelable("recipe", mRecipe);
                 // Attach the Bundle to an intent
                 final Intent intent = new Intent(this, RecipeDetailsActivity.class);
                 intent.putExtras(b);

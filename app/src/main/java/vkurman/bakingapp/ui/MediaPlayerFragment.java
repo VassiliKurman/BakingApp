@@ -34,7 +34,6 @@ import vkurman.bakingapp.R;
  * A simple {@link Fragment} subclass.
  */
 public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventListener {
-
     /**
      * URL for the video.
      */
@@ -48,20 +47,20 @@ public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventList
      */
     private SimpleExoPlayerView mPlayerView;
 
+    /**
+     * Empty constructor
+     */
     public MediaPlayerFragment() {
         // Required empty public constructor
-
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Load the saved state (the string videoUrl) if there is one
         if(savedInstanceState != null) {
             mVideoUrl = savedInstanceState.getString("videoUrl");
         }
-
         // Inflate the MediaPlayerFragment fragment layout
         View rootView = inflater.inflate(R.layout.fragment_media_player, container, false);
 
@@ -72,7 +71,7 @@ public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventList
                 (getResources(), R.drawable.videocam));
 
         // Initialise the player.
-        initializePlayer(Uri.parse(mVideoUrl));
+        initialisePlayer(Uri.parse(mVideoUrl));
 
         return rootView;
     }
@@ -99,7 +98,7 @@ public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventList
      *
      * @param mediaUri The URI of the sample to play.
      */
-    private void initializePlayer(Uri mediaUri) {
+    private void initialisePlayer(Uri mediaUri) {
         if (mExoPlayer == null) {
             // Create an instance of the ExoPlayer.
             TrackSelector trackSelector = new DefaultTrackSelector();
@@ -107,7 +106,7 @@ public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventList
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
             mPlayerView.setPlayer(mExoPlayer);
             // Prepare the MediaSource.
-            String userAgent = Util.getUserAgent(getContext(), "BakingApp");
+            String userAgent = Util.getUserAgent(getContext(), getResources().getString(R.string.app_name));
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);

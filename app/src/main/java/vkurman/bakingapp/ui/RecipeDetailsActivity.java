@@ -16,23 +16,45 @@
 
 package vkurman.bakingapp.ui;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import vkurman.bakingapp.R;
 import vkurman.bakingapp.models.Ingredient;
 import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
+import vkurman.bakingapp.utils.BakingAppConstants;
 
 /**
  * RecipeDetailsActivity displays details about ingredients or selected step in recipe.
  */
-public class RecipeDetailsActivity extends AppCompatActivity {
-
-    private static final String TAG = "RecipeDetailsActivity";
+public class RecipeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
+    /**
+     * Reference to recipe
+     */
+    private Recipe mRecipe;
+    /**
+     * Reference to step id and value -1 for ingredients
+     */
+    private int mId;
+    /**
+     * View for step number
+     */
+    @BindView(R.id.tv_step_number)
+    TextView mStepNumber;
+    @BindView(R.id.btn_previous)
+    Button mPreviousButton;
+    @BindView(R.id.btn_next)
+    Button mNextButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,47 +63,25 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.title_details_activity);
-
-        Step step = getIntent().getParcelableExtra("step");
-
+        // Binding views
+        ButterKnife.bind(this);
+        // Retrieving recipe and id
+        mRecipe = getIntent().getParcelableExtra(BakingAppConstants.INTENT_NAME_FOR_RECIPE);
+        mId = getIntent().getIntExtra(BakingAppConstants.INTENT_NAME_FOR_STEP_ID, -1);
         // Add the fragment to its container using a FragmentManager and a Transaction
         FragmentManager fragmentManager = getSupportFragmentManager();
-
-        if(step != null) {
-            if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
-                MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
-                mediaPlayerFragment.setVideoUrl(step.getVideoURL());
-                fragmentManager.beginTransaction()
-                        .add(R.id.media_container, mediaPlayerFragment)
-                        .commit();
-            } else if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
-                ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
-                thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
-                fragmentManager.beginTransaction()
-                        .add(R.id.media_container, thumbnailFragment)
-                        .commit();
-            }
-
-            StepInstructionsFragment stepFragment = new StepInstructionsFragment();
-            stepFragment.setStep(step);
-            fragmentManager.beginTransaction()
-                    .add(R.id.recipe_step_container, stepFragment)
-                    .commit();
-        } else {
-            Recipe recipe = getIntent().getParcelableExtra("recipe");
-            if(recipe == null) {
-                Log.e(TAG, "Recipe not passed!");
-                return;
-            }
-            Ingredient[] ingredients = recipe.getIngredients();
-            if (ingredients != null) {
-                IngredientsFragment ingredientsFragment = new IngredientsFragment();
-                ingredientsFragment.setIngredients(ingredients);
-                fragmentManager.beginTransaction()
-                        .add(R.id.recipe_step_container, ingredientsFragment)
-                        .commit();
+        if(mRecipe != null) {
+            if(mId < 0) {
+                Ingredient[] ingredients = mRecipe.getIngredients();
+                displayIngredients(fragmentManager, ingredients);
+            } else if (mId < mRecipe.getSteps().length) {
+                Step step = mRecipe.getSteps()[mId];
+                displayStep(fragmentManager, step);
             }
         }
+
+        mPreviousButton.setOnClickListener(this);
+        mNextButton.setOnClickListener(this);
     }
 
     @Override
@@ -92,6 +92,104 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Displays step fragments.
+     *
+     * @param fragmentManager
+     * @param step
+     */
+    private void displayStep(FragmentManager fragmentManager, Step step) {
+        if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
+            MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
+            mediaPlayerFragment.setVideoUrl(step.getVideoURL());
+            fragmentManager.beginTransaction()
+                    .add(R.id.media_container, mediaPlayerFragment)
+                    .commit();
+        } else if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
+            ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
+            thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
+            fragmentManager.beginTransaction()
+                    .add(R.id.media_container, thumbnailFragment)
+                    .commit();
+        }
+        // Displaying step instruction fragment
+        StepInstructionsFragment stepFragment = new StepInstructionsFragment();
+        stepFragment.setStep(step);
+        fragmentManager.beginTransaction()
+                .add(R.id.recipe_step_container, stepFragment)
+                .commit();
+    }
+
+    private void displayIngredients(FragmentManager fragmentManager, Ingredient[] ingredients) {
+        if (ingredients != null) {
+            IngredientsFragment ingredientsFragment = new IngredientsFragment();
+            ingredientsFragment.setIngredients(ingredients);
+            fragmentManager.beginTransaction()
+                    .add(R.id.recipe_step_container, ingredientsFragment)
+                    .commit();
+        }
+    }
+
+    private void replaceStep(Step step) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
+            MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
+            mediaPlayerFragment.setVideoUrl(step.getVideoURL());
+            int mediaContainerID = R.id.media_container;
+            fragmentTransaction.replace(mediaContainerID, mediaPlayerFragment);
+        } else if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
+            ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
+            thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
+            int mediaContainerID = R.id.media_container;
+            fragmentTransaction.replace(mediaContainerID, thumbnailFragment);
+        }
+        // Displaying step instruction fragment
+        StepInstructionsFragment stepFragment = new StepInstructionsFragment();
+        stepFragment.setStep(step);
+        int stepContainerID = R.id.recipe_step_container;
+        fragmentTransaction.replace(stepContainerID, stepFragment);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onClick(View view) {
+        // TODO check device
+        if(view == mPreviousButton) {
+            if (mId > 0) {
+                mId--;
+                mStepNumber.setText(String.valueOf(mId));
+                replaceStep(mRecipe.getSteps()[mId]);
+            } else if (mId == 0) {
+                mId--;
+                mStepNumber.setText("");
+                IngredientsFragment ingredientsFragment = new IngredientsFragment();
+                ingredientsFragment.setIngredients(mRecipe.getIngredients());
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.remove(fragmentManager.findFragmentById(R.id.media_container))
+                        .remove(fragmentManager.findFragmentById(R.id.recipe_step_container))
+                        .add(R.id.recipe_step_container, ingredientsFragment).commit();
+            }
+        } else if (view == mNextButton) {
+            if (mId < 0) {
+                mId = 0;
+                mStepNumber.setText(String.valueOf(mId));
+                replaceStep(mRecipe.getSteps()[mId]);
+            } else if (mId < mRecipe.getSteps().length - 1) {
+                mId++;
+                mStepNumber.setText(String.valueOf(mId));
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.remove(fragmentManager.findFragmentById(R.id.media_container)).commit();
+
+                replaceStep(mRecipe.getSteps()[mId]);
+            }
         }
     }
 }
