@@ -16,7 +16,6 @@
 
 package vkurman.bakingapp.ui;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +28,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import vkurman.bakingapp.R;
-import vkurman.bakingapp.models.Ingredient;
 import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
 import vkurman.bakingapp.utils.BakingAppConstants;
@@ -70,18 +68,18 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
         mId = getIntent().getIntExtra(BakingAppConstants.INTENT_NAME_FOR_STEP_ID, -1);
         // Add the fragment to its container using a FragmentManager and a Transaction
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if(mRecipe != null) {
-            if(mId < 0) {
-                Ingredient[] ingredients = mRecipe.getIngredients();
-                displayIngredients(fragmentManager, ingredients);
-            } else if (mId < mRecipe.getSteps().length) {
-                Step step = mRecipe.getSteps()[mId];
-                displayStep(fragmentManager, step);
-            }
+        if(mRecipe != null && mId >= 0 && mId < mRecipe.getSteps().length) {
+            Step step = mRecipe.getSteps()[mId];
+            displayStep(fragmentManager, step);
         }
-
+        // Setting onClickListeners
         mPreviousButton.setOnClickListener(this);
         mNextButton.setOnClickListener(this);
+        if(mId == 0) {
+            mPreviousButton.setVisibility(View.INVISIBLE);
+        } else if (mId == mRecipe.getSteps().length - 1) {
+            mNextButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -123,16 +121,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
                 .commit();
     }
 
-    private void displayIngredients(FragmentManager fragmentManager, Ingredient[] ingredients) {
-        if (ingredients != null) {
-            IngredientsFragment ingredientsFragment = new IngredientsFragment();
-            ingredientsFragment.setIngredients(ingredients);
-            fragmentManager.beginTransaction()
-                    .add(R.id.recipe_step_container, ingredientsFragment)
-                    .commit();
-        }
-    }
-
+    // TODO check for correctness
     private void replaceStep(Step step) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -157,37 +146,27 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View view) {
-        // TODO check device
+        // TODO check loading device
         if(view == mPreviousButton) {
             if (mId > 0) {
                 mId--;
+                if(mId == 0) {
+                    mPreviousButton.setVisibility(View.INVISIBLE);
+                } else if(mId == mRecipe.getSteps().length - 2) {
+                    mNextButton.setVisibility(View.VISIBLE);
+                }
                 mStepNumber.setText(String.valueOf(mId));
                 replaceStep(mRecipe.getSteps()[mId]);
-            } else if (mId == 0) {
-                mId--;
-                mStepNumber.setText("");
-                IngredientsFragment ingredientsFragment = new IngredientsFragment();
-                ingredientsFragment.setIngredients(mRecipe.getIngredients());
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.remove(fragmentManager.findFragmentById(R.id.media_container))
-                        .remove(fragmentManager.findFragmentById(R.id.recipe_step_container))
-                        .add(R.id.recipe_step_container, ingredientsFragment).commit();
             }
         } else if (view == mNextButton) {
-            if (mId < 0) {
-                mId = 0;
-                mStepNumber.setText(String.valueOf(mId));
-                replaceStep(mRecipe.getSteps()[mId]);
-            } else if (mId < mRecipe.getSteps().length - 1) {
+            if (mId < mRecipe.getSteps().length - 1) {
                 mId++;
+                if(mId == mRecipe.getSteps().length - 1) {
+                    mNextButton.setVisibility(View.INVISIBLE);
+                } else if(mId == 1) {
+                    mPreviousButton.setVisibility(View.VISIBLE);
+                }
                 mStepNumber.setText(String.valueOf(mId));
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.remove(fragmentManager.findFragmentById(R.id.media_container)).commit();
-
                 replaceStep(mRecipe.getSteps()[mId]);
             }
         }

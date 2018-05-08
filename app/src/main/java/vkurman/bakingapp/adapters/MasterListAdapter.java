@@ -28,6 +28,8 @@ import android.widget.TextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 
 import vkurman.bakingapp.R;
+import vkurman.bakingapp.models.Ingredient;
+import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
 
 /**
@@ -39,20 +41,19 @@ public class MasterListAdapter extends BaseAdapter {
 
     private static final String TAG = "MasterListAdapter";
 
-    // Keeps track of the context and list of steps to display
+    // Keeps track of the context and recipe to display
     private Context mContext;
-    private Step[] mSteps;
+    private Recipe mRecipe;
 
     /**
      * Constructor method
      *
      * @param context - app context
-     * @param steps - steps for recipe
+     * @param recipe - recipe
      */
-    public MasterListAdapter(Context context, Step[] steps) {
+    public MasterListAdapter(Context context, Recipe recipe) {
         mContext = context;
-        if (steps != null)
-            mSteps = steps;
+        mRecipe = recipe;
     }
 
     /**
@@ -60,7 +61,7 @@ public class MasterListAdapter extends BaseAdapter {
      */
     @Override
     public int getCount() {
-        return mSteps == null ? 0 : mSteps.length + 1;
+        return (mRecipe == null || mRecipe.getSteps() == null) ? 0 : mRecipe.getSteps().length + 1;
     }
 
     @Override
@@ -77,24 +78,30 @@ public class MasterListAdapter extends BaseAdapter {
      * Creates a new TextView for each item referenced by the adapter
      */
     public View getView(final int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            // TODO inflate layout for ingredients in the master list
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_step_layout, parent, false);
-        }
-
         if (position == 0) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_ingredients, parent, false);
             Log.d(TAG, "Ingredients");
 
-            // Get TextView's for ingredient
-            ImageView imageRecipe = convertView.findViewById(R.id.iv_list_step_image);
-            TextView textRecipe = convertView.findViewById(R.id.tv_list_step_text);
-
-            // Set the text for TextView
-            textRecipe.setText(R.string.text_Ingredients);
-
-            imageRecipe.setImageResource(R.drawable.ic_ingredients);
+            Ingredient[] ingredients = mRecipe.getIngredients();
+            if(ingredients != null) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < ingredients.length; i++) {
+                    Ingredient ingredient = ingredients[i];
+                    String ing = String.format("- %s %d%s",
+                            ingredient.getIngredient(),
+                            ingredient.getQuantity(),
+                            ingredient.getMeasure());
+                    sb.append(ing);
+                    if (i != ingredients.length - 1) {
+                        sb.append("\n");
+                    }
+                }
+                TextView ingredientsTextView = convertView.findViewById(R.id.tv_ingredients);
+                ingredientsTextView.setText(sb.toString());
+            }
         } else {
-            final Step step = mSteps[position - 1];
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_step_layout, parent, false);
+            final Step step = mRecipe.getSteps()[position - 1];
 
             Log.d(TAG, "Step: " + step.getShortDescription());
 
@@ -114,10 +121,10 @@ public class MasterListAdapter extends BaseAdapter {
     /**
      * Setting new array of steps.
      *
-     * @param steps - array of steps
+     * @param recipe - recipe
      */
-    public void setSteps(Step[] steps) {
-        mSteps = steps;
+    public void setRecipe(Recipe recipe) {
+        mRecipe = recipe;
         notifyDataSetChanged();
     }
 }

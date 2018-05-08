@@ -20,7 +20,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,6 @@ import android.widget.ListView;
 import vkurman.bakingapp.R;
 import vkurman.bakingapp.adapters.MasterListAdapter;
 import vkurman.bakingapp.models.Recipe;
-import vkurman.bakingapp.models.Step;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,10 +38,6 @@ import vkurman.bakingapp.models.Step;
  */
 public class MasterListFragment extends Fragment {
 
-    /**
-     * Tag for Log
-     */
-    private static final String TAG = "MasterListFragment";
     /**
      * Item click listener
      */
@@ -113,12 +107,9 @@ public class MasterListFragment extends Fragment {
      */
     public void setRecipe(Recipe recipe) {
         if(mAdapter != null) {
-            mAdapter.setSteps(recipe.getSteps());
+            mAdapter.setRecipe(recipe);
         } else {
-            for(Step step : recipe.getSteps()) {
-                Log.d(TAG, "Step: " + step.getShortDescription());
-            }
-            mAdapter = new MasterListAdapter(getContext(), recipe.getSteps());
+            mAdapter = new MasterListAdapter(getContext(), recipe);
             // Set the adapter on the ListView
             mListView.setAdapter(mAdapter);
         }
