@@ -84,7 +84,6 @@ public class MasterListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         if (context instanceof OnItemSelectedListener) {
             mListener = (OnItemSelectedListener) context;
         } else {
@@ -96,7 +95,6 @@ public class MasterListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
         mListener = null;
     }
 
