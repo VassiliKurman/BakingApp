@@ -38,7 +38,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Constructor
-    public RecipeDbHelper(Context context) {
+    RecipeDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -75,7 +75,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        // For now simply drop the table and create a new one.
+        // For this project simply drop the table and create a new one.
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RecipeEntry.TABLE_NAME_INGREDIENTS);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RecipeEntry.TABLE_NAME_STEPS);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RecipeEntry.TABLE_NAME_RECIPES);

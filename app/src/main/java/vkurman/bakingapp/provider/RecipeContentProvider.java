@@ -25,6 +25,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 /**
  * RecipeContentProvider. Content provider for recipes.
@@ -56,6 +57,7 @@ public class RecipeContentProvider extends ContentProvider {
         // Initialize a UriMatcher
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         // Add URI matches
+
         uriMatcher.addURI(RecipeContract.AUTHORITY, RecipeContract.PATH_RECIPES, RECIPES);
         uriMatcher.addURI(RecipeContract.AUTHORITY, RecipeContract.PATH_RECIPES + "/#", RECIPE_WITH_ID);
         uriMatcher.addURI(RecipeContract.AUTHORITY, RecipeContract.PATH_INGREDIENTS, INGREDIENTS);
@@ -140,12 +142,11 @@ public class RecipeContentProvider extends ContentProvider {
         // Write URI match code and set a variable to return a Cursor
         int match = sUriMatcher.match(uri);
         Cursor retCursor;
-
         String id;
-
         switch (match) {
             // Query for the recipes directory
             case RECIPES:
+                Log.d(TAG, "Retrieving all recipes");
                 retCursor = db.query(RecipeContract.RecipeEntry.TABLE_NAME_RECIPES,
                         projection,
                         selection,
@@ -156,9 +157,10 @@ public class RecipeContentProvider extends ContentProvider {
                 break;
             case RECIPE_WITH_ID:
                 id = uri.getPathSegments().get(1);
+                Log.d(TAG, "Retrieving recipe: " + id);
                 retCursor = db.query(RecipeContract.RecipeEntry.TABLE_NAME_RECIPES,
                         projection,
-                        "_id=?",
+                        "id=?",
                         new String[]{id},
                         null,
                         null,
@@ -166,6 +168,7 @@ public class RecipeContentProvider extends ContentProvider {
                 break;
             // Query for the ingredients directory
             case INGREDIENTS:
+                Log.d(TAG, "Retrieving all ingredients");
                 retCursor = db.query(RecipeContract.RecipeEntry.TABLE_NAME_INGREDIENTS,
                         projection,
                         selection,
@@ -176,9 +179,10 @@ public class RecipeContentProvider extends ContentProvider {
                 break;
             case INGREDIENTS_WITH_ID:
                 id = uri.getPathSegments().get(1);
+                Log.d(TAG, "Retrieving ingredients for recipe: " + id);
                 retCursor = db.query(RecipeContract.RecipeEntry.TABLE_NAME_INGREDIENTS,
                         projection,
-                        "_id=?",
+                        RecipeContract.RecipeEntry.COLUMN_INGREDIENTS_PARENT_ID + "=?",
                         new String[]{id},
                         null,
                         null,
@@ -186,6 +190,7 @@ public class RecipeContentProvider extends ContentProvider {
                 break;
             // Query for the recipes directory
             case STEPS:
+                Log.d(TAG, "Retrieving all steps");
                 retCursor = db.query(RecipeContract.RecipeEntry.TABLE_NAME_STEPS,
                         projection,
                         selection,
@@ -196,9 +201,10 @@ public class RecipeContentProvider extends ContentProvider {
                 break;
             case STEPS_WITH_ID:
                 id = uri.getPathSegments().get(1);
+                Log.d(TAG, "Retrieving steps for recipe: " + id);
                 retCursor = db.query(RecipeContract.RecipeEntry.TABLE_NAME_STEPS,
                         projection,
-                        "_id=?",
+                        RecipeContract.RecipeEntry.COLUMN_STEPS_PARENT_ID + "=?",
                         new String[]{id},
                         null,
                         null,
