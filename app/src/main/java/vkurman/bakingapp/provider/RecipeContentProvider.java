@@ -89,7 +89,7 @@ public class RecipeContentProvider extends ContentProvider {
         switch (match) {
             case RECIPES:
                 // Insert new values into the database
-                id = db.insert(RecipeContract.RecipeEntry.TABLE_NAME_RECIPES, null, values);
+                id = db.insertWithOnConflict(RecipeContract.RecipeEntry.TABLE_NAME_RECIPES, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 if (id > 0) {
                     returnUri = ContentUris.withAppendedId(RecipeContract.RecipeEntry.CONTENT_URI_RECIPES, id);
                 } else {
@@ -98,7 +98,7 @@ public class RecipeContentProvider extends ContentProvider {
                 break;
             case INGREDIENTS:
                 // Insert new values into the database
-                id = db.insert(RecipeContract.IngredientsEntry.TABLE_NAME_INGREDIENTS, null, values);
+                id = db.insertWithOnConflict(RecipeContract.IngredientsEntry.TABLE_NAME_INGREDIENTS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 if (id > 0) {
                     returnUri = ContentUris.withAppendedId(RecipeContract.IngredientsEntry.CONTENT_URI_INGREDIENTS, id);
                 } else {
@@ -107,7 +107,7 @@ public class RecipeContentProvider extends ContentProvider {
                 break;
             case STEPS:
                 // Insert new values into the database
-                id = db.insert(RecipeContract.StepsEntry.TABLE_NAME_STEPS, null, values);
+                id = db.insertWithOnConflict(RecipeContract.StepsEntry.TABLE_NAME_STEPS, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 if (id > 0) {
                     returnUri = ContentUris.withAppendedId(RecipeContract.StepsEntry.CONTENT_URI_STEPS, id);
                 } else {

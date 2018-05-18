@@ -20,14 +20,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Ingredient
+ * Ingredient model class for recipe.
+ *
  * Created by Vassili Kurman on 07/04/2018.
  * Version 1.0
  */
-
 public class Ingredient implements Parcelable {
 
-    private int quantity;
+    private String quantity;
     private String measure;
     private String ingredient;
 
@@ -43,22 +43,22 @@ public class Ingredient implements Parcelable {
     };
 
     private Ingredient(Parcel in) {
-        quantity = in.readInt();
+        quantity = in.readString();
         measure = in.readString();
         ingredient = in.readString();
     }
 
-    public Ingredient(int quantity, String measure, String ingredient) {
+    public Ingredient(String quantity, String measure, String ingredient) {
         this.quantity = quantity;
         this.measure = measure;
         this.ingredient = ingredient;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 
@@ -84,7 +84,7 @@ public class Ingredient implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(quantity);
+        dest.writeString(quantity);
         dest.writeString(measure);
         dest.writeString(ingredient);
     }

@@ -40,7 +40,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
     /**
      * If the database schema changes, than the database version needs to be incremented
      */
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     // Constructor
     RecipeDbHelper(Context context) {
@@ -75,9 +75,11 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
                 IngredientsEntry.COLUMN_INGREDIENTS_INGREDIENT + " TEXT NOT NULL)";
 
         try {
+            sqLiteDatabase.execSQL(SQL_CREATE_RECIPES_TABLE);
+            sqLiteDatabase.execSQL(SQL_CREATE_STEPS_TABLE);
             sqLiteDatabase.execSQL(SQL_CREATE_INGREDIENTS_TABLE);
         } catch (SQLException sqle) {
-            Log.e(TAG, "SQL creating tables error");
+            Log.e(TAG, "SQL creating tables error" + sqle);
         }
     }
 
