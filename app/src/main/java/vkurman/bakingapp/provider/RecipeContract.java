@@ -96,7 +96,6 @@ public class RecipeContract {
         // Ingredients table
         public static final String TABLE_NAME_INGREDIENTS = "ingredients";
         public final static String _ID = BaseColumns._ID;
-        public static final String COLUMN_INGREDIENTS_ID = "ingredient_id";
         public static final String COLUMN_INGREDIENTS_PARENT_ID = "recipe_id";
         public static final String COLUMN_INGREDIENTS_QUANTITY = "quantity";
         public static final String COLUMN_INGREDIENTS_MEASURE = "measure";
