@@ -10,32 +10,28 @@
  See the License for the specific language governing permissions and
  limitations under the License.-->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/colorPrimaryDark"
     android:textColor="#ffffff"
-    android:padding="@dimen/widget_margin">
+    android:orientation="vertical"
+    android:padding="8dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_recipe_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="8dp">
-        <TextView
-            android:id="@+id/tv_recipe_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/appwidget_description_recipe_name"
-            android:text="@string/appwidget_recipe_name_text"
-            android:textSize="24sp"
-            android:textStyle="bold|italic" />
-        <TextView
-            android:id="@+id/tv_widget_ingredients"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/appwidget_content_description"
-            android:text="@string/appwidget_ingredients_text"
-            android:textSize="16sp" />
-    </LinearLayout>
-</FrameLayout>
+        android:contentDescription="@string/appwidget_description_recipe_name"
+        android:text="@string/appwidget_recipe_name_text"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
+    <TextView
+        android:id="@+id/tv_widget_ingredients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/appwidget_content_description"
+        android:text="@string/appwidget_ingredients_text"
+        android:textSize="16sp" />
+</LinearLayout>

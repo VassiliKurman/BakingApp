@@ -28,7 +28,7 @@ public class WidgetIngredients implements Parcelable {
     private int recipeId;
     private String recipeName;
     private int servings;
-    private Ingredient[] ingredients;
+    private Ingredient ingredients;
 
     public static final Parcelable.Creator<WidgetIngredients> CREATOR
             = new Parcelable.Creator<WidgetIngredients>() {
@@ -45,10 +45,10 @@ public class WidgetIngredients implements Parcelable {
         recipeId = in.readInt();
         recipeName = in.readString();
         servings = in.readInt();
-        ingredients = in.createTypedArray(Ingredient.CREATOR);
+        ingredients = in.readTypedObject(Ingredient.CREATOR);
     }
 
-    public WidgetIngredients(int recipeId, String recipeName, int servings, Ingredient[] ingredients) {
+    public WidgetIngredients(int recipeId, String recipeName, int servings, Ingredient ingredients) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.servings = servings;
@@ -65,7 +65,7 @@ public class WidgetIngredients implements Parcelable {
         dest.writeInt(recipeId);
         dest.writeString(recipeName);
         dest.writeInt(servings);
-        dest.writeTypedArray(ingredients, 0);
+        dest.writeTypedObject(ingredients, 0);
     }
 
     public int getRecipeId() {
@@ -92,11 +92,11 @@ public class WidgetIngredients implements Parcelable {
         this.servings = servings;
     }
 
-    public Ingredient[] getIngredients() {
+    public Ingredient getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Ingredient[] ingredients) {
+    public void setIngredients(Ingredient ingredients) {
         this.ingredients = ingredients;
     }
 }
