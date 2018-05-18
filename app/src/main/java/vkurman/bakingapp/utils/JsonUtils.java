@@ -88,7 +88,7 @@ public class JsonUtils {
         for(Recipe recipe : recipes) {
             Log.d(TAG, "Recipe: " + recipe.getName());
             for(Ingredient ingredient : recipe.getIngredients()) {
-                Log.d(TAG, "-----Ingredient: " + ingredient.getIngredient());
+                Log.d(TAG, "-----Ingredient: " + ingredient.getIngredient() + " " + ingredient.getQuantity() + ingredient.getMeasure());
             }
             for(Step step : recipe.getSteps()) {
                 Log.d(TAG, "-----Step: " + step.getId() + " " + step.getShortDescription());
