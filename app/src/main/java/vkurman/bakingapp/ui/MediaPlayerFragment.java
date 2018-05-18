@@ -1,3 +1,18 @@
+/*
+* Copyright (C) 2018 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*  	http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package vkurman.bakingapp.ui;
 
 import android.graphics.BitmapFactory;
@@ -5,16 +20,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -24,7 +41,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
@@ -33,7 +50,20 @@ import vkurman.bakingapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventListener {
+public class MediaPlayerFragment extends Fragment implements Player.EventListener {
+
+    /**
+     * Key to save exoplayer playing position
+     */
+    private static final String EXOPLAYER_POSITION_KEY = "position_key";
+    /**
+     * Key to save exoplayer playing state
+     */
+    private static final String EXOPLAYER__STATE_KEY = "state_key";
+    /**
+     * Key to save videoUrl
+     */
+    private static final String VIDEO_URL_KEY = "videoUrl";
     /**
      * URL for the video.
      */
@@ -45,7 +75,19 @@ public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventList
     /**
      * UI element for ExoPlayer
      */
-    private SimpleExoPlayerView mPlayerView;
+    private PlayerView mPlayerView;
+    /**
+     * Playback state builder
+     */
+    private PlaybackStateCompat.Builder mStateBuilder;
+    /**
+     * Exoplayer video position on device state change
+     */
+    private long mVideoPosition;
+    /**
+     * Exoplayer state on device state change
+     */
+    private boolean mVideoState;
 
     /**
      * Empty constructor
@@ -59,14 +101,16 @@ public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventList
                              Bundle savedInstanceState) {
         // Load the saved state (the string videoUrl) if there is one
         if(savedInstanceState != null) {
-            mVideoUrl = savedInstanceState.getString("videoUrl");
+            mVideoUrl = savedInstanceState.getString(VIDEO_URL_KEY);
+            mVideoPosition = savedInstanceState.getLong(EXOPLAYER_POSITION_KEY);
+            mVideoState = savedInstanceState.getBoolean(EXOPLAYER__STATE_KEY);
         }
         // Inflate the MediaPlayerFragment fragment layout
         View rootView = inflater.inflate(R.layout.fragment_media_player, container, false);
 
         mPlayerView = rootView.findViewById(R.id.playerView);
 
-        // Load the question mark as the background image until the user answers the question.
+        // Load the video camera as the background image
         mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource
                 (getResources(), R.drawable.videocam));
 
@@ -90,7 +134,9 @@ public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventList
      */
     @Override
     public void onSaveInstanceState(@NonNull Bundle currentState) {
-        currentState.putString("videoUrl", mVideoUrl);
+        currentState.putString(VIDEO_URL_KEY, mVideoUrl);
+        currentState.putLong(EXOPLAYER_POSITION_KEY, mVideoPosition);
+        currentState.putBoolean(EXOPLAYER__STATE_KEY, mVideoState);
     }
 
     /**
@@ -107,10 +153,21 @@ public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventList
             mPlayerView.setPlayer(mExoPlayer);
             // Prepare the MediaSource.
             String userAgent = Util.getUserAgent(getContext(), getResources().getString(R.string.app_name));
-            MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
-                    getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
+            MediaSource mediaSource = new ExtractorMediaSource(
+                    mediaUri,
+                    new DefaultDataSourceFactory(getContext(), userAgent),
+                    new DefaultExtractorsFactory(),
+                    null,
+                    null);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+            // Resume playing state and playing position
+            if (mVideoPosition != 0) {
+                mExoPlayer.seekTo(mVideoPosition);
+                mExoPlayer.setPlayWhenReady(mVideoState);
+            } else {
+                // If position is 0 than video is never played and should start by default
+                mExoPlayer.setPlayWhenReady(true);
+            }
         }
     }
 
@@ -126,55 +183,80 @@ public class MediaPlayerFragment extends Fragment implements ExoPlayer.EventList
     }
 
     /**
-     * Release the player when the activity is destroyed.
+     * Release the player when the activity is paused.
      */
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        releasePlayer();
+    public void onPause() {
+        super.onPause();
+
+        if (mExoPlayer != null) {
+            mVideoState = mExoPlayer.getPlayWhenReady();
+            mVideoPosition = mExoPlayer.getCurrentPosition();
+            releasePlayer();
+        }
     }
 
     @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {}
+    public void onResume() {
+        super.onResume();
+        initialisePlayer(Uri.parse(mVideoUrl));
+    }
 
     @Override
+    public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {}
+    @Override
     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {}
-
     @Override
     public void onLoadingChanged(boolean isLoading) {}
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if((playbackState == ExoPlayer.STATE_READY) && playWhenReady) {
-            Toast.makeText(getContext(), "Playing", Toast.LENGTH_SHORT).show();
-        } else if(playbackState == ExoPlayer.STATE_READY) {
-            Toast.makeText(getContext(), "Paused", Toast.LENGTH_SHORT).show();
+        if((playbackState == Player.STATE_READY) && playWhenReady) {
+            mStateBuilder.setState(
+                    PlaybackStateCompat.STATE_PLAYING,
+                    mExoPlayer.getCurrentPosition(),
+                    1f);
+
+            // TODO show full screen on landscape mode
+
+        } else if(playbackState == Player.STATE_READY) {
+            mStateBuilder.setState(
+                    PlaybackStateCompat.STATE_PAUSED,
+                    mExoPlayer.getCurrentPosition(),
+                    1f);
         }
     }
 
     @Override
-    public void onPlayerError(ExoPlaybackException error) {}
-
+    public void onRepeatModeChanged(int repeatMode) {}
     @Override
-    public void onPositionDiscontinuity() {}
+    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {}
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {}
+    @Override
+    public void onPositionDiscontinuity(int reason) {}
+    @Override
+    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {}
+    @Override
+    public void onSeekProcessed() {}
 
-//    /**
-//     * Media Session Callbacks, where all external clients control the player.
-//     */
-//    private class MySessionCallback extends MediaSessionCompat.Callback {
-//        @Override
-//        public void onPlay() {
-//            mExoPlayer.setPlayWhenReady(true);
-//        }
-//
-//        @Override
-//        public void onPause() {
-//            mExoPlayer.setPlayWhenReady(false);
-//        }
-//
-//        @Override
-//        public void onSkipToPrevious() {
-//            mExoPlayer.seekTo(0);
-//        }
-//    }
+    /**
+     * Media Session Callbacks, where all external clients control the player.
+     */
+    private class MySessionCallback extends MediaSessionCompat.Callback {
+        @Override
+        public void onPlay() {
+            mExoPlayer.setPlayWhenReady(true);
+        }
+
+        @Override
+        public void onPause() {
+            mExoPlayer.setPlayWhenReady(false);
+        }
+
+        @Override
+        public void onSkipToPrevious() {
+            mExoPlayer.seekTo(0);
+        }
+    }
 }

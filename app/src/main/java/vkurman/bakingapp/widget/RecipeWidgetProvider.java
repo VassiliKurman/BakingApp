@@ -24,7 +24,7 @@ import android.widget.RemoteViews;
 
 import vkurman.bakingapp.R;
 import vkurman.bakingapp.RecipesActivity;
-import vkurman.bakingapp.models.WidgetIngredients;
+import vkurman.bakingapp.models.WidgetIngredient;
 import vkurman.bakingapp.ui.RecipeActivity;
 import vkurman.bakingapp.utils.BakingAppConstants;
 
@@ -33,10 +33,10 @@ import vkurman.bakingapp.utils.BakingAppConstants;
  */
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
-    private WidgetIngredients widgetIngredients;
+    private WidgetIngredient widgetIngredient;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, WidgetIngredients widgetIngredients) {
+                                int appWidgetId, WidgetIngredient widgetIngredient) {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
         // Create an Intent to launch recipe activity
@@ -56,7 +56,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId, widgetIngredients);
+            updateAppWidget(context, appWidgetManager, appWidgetId, widgetIngredient);
         }
     }
 

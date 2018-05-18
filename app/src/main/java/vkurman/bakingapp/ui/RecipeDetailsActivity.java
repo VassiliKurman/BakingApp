@@ -125,16 +125,19 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
     private void replaceStep(Step step) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        // Remove media fragment
+        if(fragmentManager.findFragmentById(R.id.media_container) != null) {
+            fragmentTransaction.remove(fragmentManager.findFragmentById(R.id.media_container));
+        }
+        // Add new media fragment
         if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
             MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
             mediaPlayerFragment.setVideoUrl(step.getVideoURL());
-            int mediaContainerID = R.id.media_container;
-            fragmentTransaction.replace(mediaContainerID, mediaPlayerFragment);
+            fragmentTransaction.add(R.id.media_container, mediaPlayerFragment);
         } else if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
             ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
             thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
-            int mediaContainerID = R.id.media_container;
-            fragmentTransaction.replace(mediaContainerID, thumbnailFragment);
+            fragmentTransaction.add(R.id.media_container, thumbnailFragment);
         }
         // Displaying step instruction fragment
         StepInstructionsFragment stepFragment = new StepInstructionsFragment();

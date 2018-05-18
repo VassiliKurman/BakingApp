@@ -9,10 +9,10 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.-->
-<com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/playerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context="vkurman.bakingapp.ui.MediaPlayerFragment" />
+<com.google.android.exoplayer2.ui.PlayerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/playerView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="vkurman.bakingapp.ui.MediaPlayerFragment" />

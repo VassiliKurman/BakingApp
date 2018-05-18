@@ -23,32 +23,32 @@ import android.os.Parcelable;
  * Created by Vassili Kurman on 18/05/2018.
  * Version 1.0
  */
-public class WidgetIngredients implements Parcelable {
+public class WidgetIngredient implements Parcelable {
 
     private int recipeId;
     private String recipeName;
     private int servings;
     private Ingredient ingredients;
 
-    public static final Parcelable.Creator<WidgetIngredients> CREATOR
-            = new Parcelable.Creator<WidgetIngredients>() {
-        public WidgetIngredients createFromParcel(Parcel in) {
-            return new WidgetIngredients(in);
+    public static final Parcelable.Creator<WidgetIngredient> CREATOR
+            = new Parcelable.Creator<WidgetIngredient>() {
+        public WidgetIngredient createFromParcel(Parcel in) {
+            return new WidgetIngredient(in);
         }
 
-        public WidgetIngredients[] newArray(int size) {
-            return new WidgetIngredients[size];
+        public WidgetIngredient[] newArray(int size) {
+            return new WidgetIngredient[size];
         }
     };
 
-    private WidgetIngredients(Parcel in) {
+    private WidgetIngredient(Parcel in) {
         recipeId = in.readInt();
         recipeName = in.readString();
         servings = in.readInt();
         ingredients = in.readTypedObject(Ingredient.CREATOR);
     }
 
-    public WidgetIngredients(int recipeId, String recipeName, int servings, Ingredient ingredients) {
+    public WidgetIngredient(int recipeId, String recipeName, int servings, Ingredient ingredients) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
         this.servings = servings;
