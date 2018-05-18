@@ -16,6 +16,6 @@
     <!-- Widget text -->
     <string name="appwidget_ingredients_text">Ingredients</string>
     <string name="appwidget_content_description">Recipe ingredients</string>
-    <string name="add_widget">Add widget</string>
+    <string name="menu_action_show_widget">Show widget</string>
 
 </resources>
