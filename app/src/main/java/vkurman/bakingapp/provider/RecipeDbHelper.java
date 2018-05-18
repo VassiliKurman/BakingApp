@@ -17,8 +17,10 @@
 package vkurman.bakingapp.provider;
 
 import android.content.Context;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import vkurman.bakingapp.provider.RecipeContract.RecipeEntry;
 
@@ -28,6 +30,9 @@ import vkurman.bakingapp.provider.RecipeContract.RecipeEntry;
  * Version 1.0
  */
 public class RecipeDbHelper extends SQLiteOpenHelper {
+
+    private static final String TAG = "RecipeDbHelper";
+
     /**
      * The database name
      */
@@ -35,7 +40,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
     /**
      * If the database schema changes, than the database version needs to be incremented
      */
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     // Constructor
     RecipeDbHelper(Context context) {
@@ -45,20 +50,20 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         // Create a table to hold the recipe data
-        final String SQL_CREATE_RECIPES_TABLE = "CREATE TABLE " + RecipeEntry.TABLE_NAME_STEPS + " (" +
-                RecipeEntry.COLUMN_RECIPES_ID + " INTEGER PRIMARY KEY," +
-                RecipeEntry.COLUMN_RECIPES_NAME + " TEXT NOT NULL, " +
-                RecipeEntry.COLUMN_RECIPES_SERVINGS + " INTEGER, " +
-                RecipeEntry.COLUMN_RECIPES_IMAGE + " TEXT)";
+//        final String SQL_CREATE_RECIPES_TABLE = "CREATE TABLE " + RecipeEntry.TABLE_NAME_STEPS + " (" +
+//                RecipeEntry.COLUMN_RECIPES_ID + " INTEGER PRIMARY KEY," +
+//                RecipeEntry.COLUMN_RECIPES_NAME + " TEXT NOT NULL, " +
+//                RecipeEntry.COLUMN_RECIPES_SERVINGS + " INTEGER, " +
+//                RecipeEntry.COLUMN_RECIPES_IMAGE + " TEXT)";
 
         // Create a table to hold the steps data
-        final String SQL_CREATE_STEPS_TABLE = "CREATE TABLE " + RecipeEntry.TABLE_NAME_STEPS + " (" +
-                RecipeEntry.COLUMN_STEPS_ID + " INTEGER PRIMARY KEY," +
-                RecipeEntry.COLUMN_STEPS_PARENT_ID + " INTEGER NOT NULL, " +
-                RecipeEntry.COLUMN_STEPS_SHORT_DESCRIPTION + " TEXT NOT NULL, " +
-                RecipeEntry.COLUMN_STEPS_DESCRIPTION + " TEXT NOT NULL, " +
-                RecipeEntry.COLUMN_STEPS_VIDEO_URL + " TEXT, " +
-                RecipeEntry.COLUMN_STEPS_THUMBNAIL_URL + " TEXT)";
+//        final String SQL_CREATE_STEPS_TABLE = "CREATE TABLE " + RecipeEntry.TABLE_NAME_STEPS + " (" +
+//                RecipeEntry.COLUMN_STEPS_ID + " INTEGER PRIMARY KEY," +
+//                RecipeEntry.COLUMN_STEPS_PARENT_ID + " INTEGER NOT NULL, " +
+//                RecipeEntry.COLUMN_STEPS_SHORT_DESCRIPTION + " TEXT NOT NULL, " +
+//                RecipeEntry.COLUMN_STEPS_DESCRIPTION + " TEXT NOT NULL, " +
+//                RecipeEntry.COLUMN_STEPS_VIDEO_URL + " TEXT, " +
+//                RecipeEntry.COLUMN_STEPS_THUMBNAIL_URL + " TEXT)";
 
         // Create a table to hold the ingredients data
         final String SQL_CREATE_INGREDIENTS_TABLE = "CREATE TABLE " + RecipeEntry.TABLE_NAME_INGREDIENTS + " (" +
@@ -68,17 +73,29 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
                 RecipeEntry.COLUMN_INGREDIENTS_MEASURE + " TEXT NOT NULL, " +
                 RecipeEntry.COLUMN_INGREDIENTS_INGREDIENT + " TEXT NOT NULL)";
 
-        sqLiteDatabase.execSQL(SQL_CREATE_RECIPES_TABLE);
-        sqLiteDatabase.execSQL(SQL_CREATE_INGREDIENTS_TABLE);
-        sqLiteDatabase.execSQL(SQL_CREATE_STEPS_TABLE);
+//        try {
+//            sqLiteDatabase.execSQL(SQL_CREATE_RECIPES_TABLE);
+//        } catch (SQLException sqle) {
+//            Log.e(TAG, "SQL creating RECIPES error");
+//        }
+        try {
+            sqLiteDatabase.execSQL(SQL_CREATE_INGREDIENTS_TABLE);
+        } catch (SQLException sqle) {
+            Log.e(TAG, "SQL creating INGREDIENTS error");
+        }
+//        try {
+//            sqLiteDatabase.execSQL(SQL_CREATE_STEPS_TABLE);
+//        } catch (SQLException sqle) {
+//            Log.e(TAG, "SQL creating STEPS error");
+//        }
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         // For this project simply drop the table and create a new one.
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RecipeEntry.TABLE_NAME_INGREDIENTS);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RecipeEntry.TABLE_NAME_STEPS);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RecipeEntry.TABLE_NAME_RECIPES);
+//        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RecipeEntry.TABLE_NAME_STEPS);
+//        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RecipeEntry.TABLE_NAME_RECIPES);
 
         onCreate(sqLiteDatabase);
     }

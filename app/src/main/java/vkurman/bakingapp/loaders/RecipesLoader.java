@@ -53,7 +53,10 @@ public class RecipesLoader extends AsyncTaskLoader<List<Recipe>> {
         try {
             String json = RecipeUtils.getJsonResponseFromWeb(url);
             Log.d(TAG, "Recipes JSON length: " + json.length());
-            return JsonUtils.parseRecipeJson(json);
+            // Saving data to database
+            List<Recipe> recipes = JsonUtils.parseRecipeJson(json);
+            RecipeUtils.saveRecipes(getContext(), recipes);
+            return recipes;
         } catch (IOException e) {
             Log.e(TAG, "Exception getting response from web");
         }

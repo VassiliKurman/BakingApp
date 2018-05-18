@@ -95,24 +95,6 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
                 fragmentManager.beginTransaction()
                         .add(R.id.recipe_step_container, stepFragment)
                         .commit();
-
-
-//                if (savedInstanceState == null) {
-                    // In two-pane mode, add initial BodyPartFragments to the screen
-//                    if (mRecipe.getImage() != null) {
-//                        ThumbnailFragment imageFragment = new ThumbnailFragment();
-//                        imageFragment.setThumbnailUrl(mRecipe.getImage());
-//                        fragmentManager.beginTransaction()
-//                                .add(R.id.media_container, imageFragment)
-//                                .commit();
-//                    }
-//
-//                    IngredientsFragment ingredientsFragment = new IngredientsFragment();
-//                    ingredientsFragment.setIngredients(mRecipe.getIngredients());
-//                    fragmentManager.beginTransaction()
-//                            .add(R.id.recipe_step_container, ingredientsFragment)
-//                            .commit();
-//                }
             } else {
                 // We're in single-pane mode and displaying fragments on a phone in separate activities
                 mTwoPane = false;
