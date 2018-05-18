@@ -19,7 +19,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,18 +30,23 @@ import java.util.Scanner;
 
 import vkurman.bakingapp.models.Ingredient;
 import vkurman.bakingapp.models.Recipe;
+import vkurman.bakingapp.models.Step;
 import vkurman.bakingapp.provider.RecipeContract;
 
 /**
- * RecipeUtils
+ * RecipeUtils class is a helper class that handles tasks such as creating URL and getting response
+ * from the web.
  * Created by Vassili Kurman on 07/04/2018.
  * Version 1.0
  */
-
 public class RecipeUtils {
-
+    /**
+     * Tag for logging
+     */
     private static final String TAG = "RecipeUtils";
-
+    /**
+     * URL where recipes are retrived from
+     */
     private static final String API_BASE_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
 
     /**
@@ -93,32 +97,47 @@ public class RecipeUtils {
      */
     public static void saveRecipes(Context context, List<Recipe> recipes) {
         // Create new empty ContentValues object
-//        ContentValues recipeContentValues = new ContentValues();
+        ContentValues recipeContentValues = new ContentValues();
         // Put the task description and selected mPriority into the ContentValues
         for (Recipe recipe: recipes) {
-//            recipeContentValues.put(RecipeContract.RecipeEntry.COLUMN_RECIPES_ID, recipe.getId());
-//            recipeContentValues.put(RecipeContract.RecipeEntry.COLUMN_RECIPES_NAME, recipe.getName());
-//            recipeContentValues.put(RecipeContract.RecipeEntry.COLUMN_RECIPES_SERVINGS, recipe.getServings());
-//            recipeContentValues.put(RecipeContract.RecipeEntry.COLUMN_RECIPES_IMAGE, recipe.getImage());
-//            // Insert the content values via a ContentResolver
-//            Uri uri = context.getContentResolver().insert(RecipeContract.RecipeEntry.CONTENT_URI_RECIPES, recipeContentValues);
-//
-//            // Log display
-//            if (uri != null) {
-//                Log.d(TAG, uri.toString());
-//            }
+            recipeContentValues.put(RecipeContract.RecipeEntry.COLUMN_RECIPES_ID, recipe.getId());
+            recipeContentValues.put(RecipeContract.RecipeEntry.COLUMN_RECIPES_NAME, recipe.getName());
+            recipeContentValues.put(RecipeContract.RecipeEntry.COLUMN_RECIPES_SERVINGS, recipe.getServings());
+            recipeContentValues.put(RecipeContract.RecipeEntry.COLUMN_RECIPES_IMAGE, recipe.getImage());
+            // Insert the content values via a ContentResolver
+            Uri recipeUri = context.getContentResolver().insert(RecipeContract.RecipeEntry.CONTENT_URI_RECIPES, recipeContentValues);
+
+            // Log display
+            if (recipeUri != null) {
+                Log.d(TAG, recipeUri.toString());
+            }
 
             ContentValues ingredientContentValues = new ContentValues();
             for(Ingredient ingredient: recipe.getIngredients()) {
-                ingredientContentValues.put(RecipeContract.RecipeEntry.COLUMN_INGREDIENTS_PARENT_ID, recipe.getId());
-                ingredientContentValues.put(RecipeContract.RecipeEntry.COLUMN_INGREDIENTS_QUANTITY, ingredient.getQuantity());
-                ingredientContentValues.put(RecipeContract.RecipeEntry.COLUMN_INGREDIENTS_MEASURE, ingredient.getMeasure());
-                ingredientContentValues.put(RecipeContract.RecipeEntry.COLUMN_INGREDIENTS_INGREDIENT, ingredient.getIngredient());
+                ingredientContentValues.put(RecipeContract.IngredientsEntry.COLUMN_INGREDIENTS_PARENT_ID, recipe.getId());
+                ingredientContentValues.put(RecipeContract.IngredientsEntry.COLUMN_INGREDIENTS_QUANTITY, ingredient.getQuantity());
+                ingredientContentValues.put(RecipeContract.IngredientsEntry.COLUMN_INGREDIENTS_MEASURE, ingredient.getMeasure());
+                ingredientContentValues.put(RecipeContract.IngredientsEntry.COLUMN_INGREDIENTS_INGREDIENT, ingredient.getIngredient());
                 // Insert the content values via a ContentResolver
-                Uri uri = context.getContentResolver().insert(RecipeContract.RecipeEntry.CONTENT_URI_INGREDIENTS, ingredientContentValues);
-                if (uri != null) {
-                Log.d(TAG, uri.toString());
+                Uri ingredientUri = context.getContentResolver().insert(RecipeContract.IngredientsEntry.CONTENT_URI_INGREDIENTS, ingredientContentValues);
+                if (ingredientUri != null) {
+                    Log.d(TAG, ingredientUri.toString());
+                }
             }
+
+            ContentValues stepsContentValues = new ContentValues();
+            for(Step step: recipe.getSteps()) {
+                stepsContentValues.put(RecipeContract.StepsEntry.COLUMN_STEPS_ID, step.getId());
+                stepsContentValues.put(RecipeContract.StepsEntry.COLUMN_STEPS_PARENT_ID, recipe.getId());
+                stepsContentValues.put(RecipeContract.StepsEntry.COLUMN_STEPS_SHORT_DESCRIPTION, step.getShortDescription());
+                stepsContentValues.put(RecipeContract.StepsEntry.COLUMN_STEPS_DESCRIPTION, step.getDescription());
+                stepsContentValues.put(RecipeContract.StepsEntry.COLUMN_STEPS_VIDEO_URL, step.getVideoURL());
+                stepsContentValues.put(RecipeContract.StepsEntry.COLUMN_STEPS_THUMBNAIL_URL, step.getThumbnailURL());
+                // Insert the content values via a ContentResolver
+                Uri stepUri = context.getContentResolver().insert(RecipeContract.IngredientsEntry.CONTENT_URI_INGREDIENTS, stepsContentValues);
+                if (stepUri != null) {
+                    Log.d(TAG, stepUri.toString());
+                }
             }
         }
     }
