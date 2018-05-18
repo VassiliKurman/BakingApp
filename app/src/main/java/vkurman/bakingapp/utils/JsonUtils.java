@@ -110,7 +110,7 @@ public class JsonUtils {
              for (int i = 0; i < json.length(); i++) {
                  JSONObject ingredientsJsonObject = json.optJSONObject(i);
                  // Getting individual values from json object
-                 int quantity = ingredientsJsonObject.optInt(JSON_INGREDIENT_QUANTITY);
+                 String quantity = ingredientsJsonObject.optString(JSON_INGREDIENT_QUANTITY);
                  String measure = ingredientsJsonObject.optString(JSON_INGREDIENT_MEASURE);
                  String ingredient = ingredientsJsonObject.optString(JSON_INGREDIENT_INGREDIENT);
 
