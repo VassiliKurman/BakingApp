@@ -98,18 +98,18 @@ public class RecipeContentProvider extends ContentProvider {
                 break;
             case INGREDIENTS:
                 // Insert new values into the database
-                id = db.insert(RecipeContract.RecipeEntry.TABLE_NAME_INGREDIENTS, null, values);
+                id = db.insert(RecipeContract.IngredientsEntry.TABLE_NAME_INGREDIENTS, null, values);
                 if (id > 0) {
-                    returnUri = ContentUris.withAppendedId(RecipeContract.RecipeEntry.CONTENT_URI_INGREDIENTS, id);
+                    returnUri = ContentUris.withAppendedId(RecipeContract.IngredientsEntry.CONTENT_URI_INGREDIENTS, id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
                 break;
             case STEPS:
                 // Insert new values into the database
-                id = db.insert(RecipeContract.RecipeEntry.TABLE_NAME_STEPS, null, values);
+                id = db.insert(RecipeContract.StepsEntry.TABLE_NAME_STEPS, null, values);
                 if (id > 0) {
-                    returnUri = ContentUris.withAppendedId(RecipeContract.RecipeEntry.CONTENT_URI_STEPS, id);
+                    returnUri = ContentUris.withAppendedId(RecipeContract.StepsEntry.CONTENT_URI_STEPS, id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
@@ -169,7 +169,7 @@ public class RecipeContentProvider extends ContentProvider {
             // Query for the ingredients directory
             case INGREDIENTS:
                 Log.d(TAG, "Retrieving all ingredients");
-                retCursor = db.query(RecipeContract.RecipeEntry.TABLE_NAME_INGREDIENTS,
+                retCursor = db.query(RecipeContract.IngredientsEntry.TABLE_NAME_INGREDIENTS,
                         projection,
                         selection,
                         selectionArgs,
@@ -180,9 +180,9 @@ public class RecipeContentProvider extends ContentProvider {
             case INGREDIENTS_WITH_ID:
                 id = uri.getPathSegments().get(1);
                 Log.d(TAG, "Retrieving ingredients for recipe: " + id);
-                retCursor = db.query(RecipeContract.RecipeEntry.TABLE_NAME_INGREDIENTS,
+                retCursor = db.query(RecipeContract.IngredientsEntry.TABLE_NAME_INGREDIENTS,
                         projection,
-                        RecipeContract.RecipeEntry.COLUMN_INGREDIENTS_PARENT_ID + "=?",
+                        RecipeContract.IngredientsEntry.COLUMN_INGREDIENTS_PARENT_ID + "=?",
                         new String[]{id},
                         null,
                         null,
@@ -191,7 +191,7 @@ public class RecipeContentProvider extends ContentProvider {
             // Query for the recipes directory
             case STEPS:
                 Log.d(TAG, "Retrieving all steps");
-                retCursor = db.query(RecipeContract.RecipeEntry.TABLE_NAME_STEPS,
+                retCursor = db.query(RecipeContract.StepsEntry.TABLE_NAME_STEPS,
                         projection,
                         selection,
                         selectionArgs,
@@ -202,9 +202,9 @@ public class RecipeContentProvider extends ContentProvider {
             case STEPS_WITH_ID:
                 id = uri.getPathSegments().get(1);
                 Log.d(TAG, "Retrieving steps for recipe: " + id);
-                retCursor = db.query(RecipeContract.RecipeEntry.TABLE_NAME_STEPS,
+                retCursor = db.query(RecipeContract.StepsEntry.TABLE_NAME_STEPS,
                         projection,
-                        RecipeContract.RecipeEntry.COLUMN_STEPS_PARENT_ID + "=?",
+                        RecipeContract.StepsEntry.COLUMN_STEPS_PARENT_ID + "=?",
                         new String[]{id},
                         null,
                         null,
