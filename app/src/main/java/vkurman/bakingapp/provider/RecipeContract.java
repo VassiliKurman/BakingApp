@@ -52,36 +52,52 @@ public class RecipeContract {
     public static final long INVALID_STEP_ID = -1;
     public static final long INVALID_INGREDIENT_ID = -1;
 
+    /**
+     * Inner class for Recipe columns
+     */
     public static final class RecipeEntry implements BaseColumns {
-
-        // TaskEntry content URI = base content URI + path
+        // Entry content URI = base content URI + path
         public static final Uri CONTENT_URI_RECIPES =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_RECIPES).build();
-        public static final Uri CONTENT_URI_STEPS =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_STEPS).build();
-        public static final Uri CONTENT_URI_INGREDIENTS =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_INGREDIENTS).build();
-
         // Recipes table
         public static final String TABLE_NAME_RECIPES = "recipes";
         public static final String COLUMN_RECIPES_ID = "id";
         public static final String COLUMN_RECIPES_NAME = "name";
         public static final String COLUMN_RECIPES_SERVINGS = "servings";
         public static final String COLUMN_RECIPES_IMAGE = "image";
+    }
 
+    /**
+     * Inner class for Steps columns
+     */
+    public static final class StepsEntry implements BaseColumns {
+
+        // TaskEntry content URI = base content URI + path
+        public static final Uri CONTENT_URI_STEPS =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_STEPS).build();
         // Steps table
         public static final String TABLE_NAME_STEPS = "ingredients";
-        public static final String COLUMN_STEPS_ID = "id";
-        public static final String COLUMN_STEPS_PARENT_ID = "recipes_id";
+        public final static String _ID = BaseColumns._ID;
+        public static final String COLUMN_STEPS_ID = "step_id";
+        public static final String COLUMN_STEPS_PARENT_ID = "recipe_id";
         public static final String COLUMN_STEPS_SHORT_DESCRIPTION = "shortDescription";
         public static final String COLUMN_STEPS_DESCRIPTION = "description";
         public static final String COLUMN_STEPS_VIDEO_URL = "videoURL";
         public static final String COLUMN_STEPS_THUMBNAIL_URL = "thumbnailURL";
+    }
 
+    /**
+     * Inner class for Ingredients columns
+     */
+    public static final class IngredientsEntry implements BaseColumns {
+        // Entry content URI = base content URI + path
+        public static final Uri CONTENT_URI_INGREDIENTS =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_INGREDIENTS).build();
         // Ingredients table
         public static final String TABLE_NAME_INGREDIENTS = "ingredients";
-        public static final String COLUMN_INGREDIENTS_ID = "id";
-        public static final String COLUMN_INGREDIENTS_PARENT_ID = "recipes_id";
+        public final static String _ID = BaseColumns._ID;
+        public static final String COLUMN_INGREDIENTS_ID = "ingredient_id";
+        public static final String COLUMN_INGREDIENTS_PARENT_ID = "recipe_id";
         public static final String COLUMN_INGREDIENTS_QUANTITY = "quantity";
         public static final String COLUMN_INGREDIENTS_MEASURE = "measure";
         public static final String COLUMN_INGREDIENTS_INGREDIENT = "ingredient";
