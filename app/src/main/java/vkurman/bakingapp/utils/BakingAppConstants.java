@@ -20,5 +20,9 @@ public class BakingAppConstants {
      * Name for Intent to save recipe id
      */
     public static final String INTENT_NAME_FOR_RECIPE_ID = "recipeId";
+    /**
+     * Name for Intent to save recipe name
+     */
+    public static final String INTENT_NAME_FOR_RECIPE_NAME = "recipeName";
 
 }

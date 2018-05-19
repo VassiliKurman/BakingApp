@@ -20,12 +20,12 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.widget.RemoteViews;
 
 import vkurman.bakingapp.R;
 import vkurman.bakingapp.RecipesActivity;
-import vkurman.bakingapp.models.WidgetIngredient;
-import vkurman.bakingapp.ui.RecipeActivity;
+import vkurman.bakingapp.ui.RecipeDetailsActivity;
 import vkurman.bakingapp.utils.BakingAppConstants;
 
 /**
@@ -33,20 +33,22 @@ import vkurman.bakingapp.utils.BakingAppConstants;
  */
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
-    private WidgetIngredient widgetIngredient;
-
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, WidgetIngredient widgetIngredient) {
+                                int appWidgetId, int recipeId, String recipeName) {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
-        // Create an Intent to launch recipe activity
-        // TODO change to launch specific recipe
-        Intent intent = new Intent(context, RecipesActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        views.setOnClickPendingIntent(R.id.tv_widget_ingredients, pendingIntent);
-
-//        CharSequence widgetText = context.getString(R.string.appwidget_ingredients);
-//        views.setTextViewText(R.id.tv_widget_ingredients, widgetText);
+        // Create an Intent to launch RecipeDetailsActivity
+//        Intent clickIntent = new Intent(context, RecipeDetailsActivity.class);
+//        clickIntent.putExtra(BakingAppConstants.INTENT_NAME_FOR_RECIPE_ID, recipeId);
+//        clickIntent.putExtra(BakingAppConstants.INTENT_NAME_FOR_RECIPE_NAME, recipeName);
+        Intent clickIntent = new Intent(context, RecipesActivity.class);
+        PendingIntent pendingClickIntent = PendingIntent.getActivity(context, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.widget_root, pendingClickIntent);
+        views.setTextViewText(R.id.tv_recipe_name, recipeId + " - " + recipeName);
+        // Set the list of ingredients for the specified recipe id
+        Intent adapterIntent = new Intent(context, RecipeWidgetService.class);
+        adapterIntent.setData(Uri.fromParts("content", String.valueOf(recipeId), null));
+        views.setRemoteAdapter(R.id.lv_widget_ingredients, adapterIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -54,10 +56,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
-        for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId, widgetIngredient);
-        }
+        // Do nothing in this implementation
     }
 
     @Override
@@ -70,4 +69,3 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 }
-
