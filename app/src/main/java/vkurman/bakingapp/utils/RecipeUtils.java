@@ -134,7 +134,7 @@ public class RecipeUtils {
                 stepsContentValues.put(RecipeContract.StepsEntry.COLUMN_STEPS_VIDEO_URL, step.getVideoURL());
                 stepsContentValues.put(RecipeContract.StepsEntry.COLUMN_STEPS_THUMBNAIL_URL, step.getThumbnailURL());
                 // Insert the content values via a ContentResolver
-                Uri stepUri = context.getContentResolver().insert(RecipeContract.IngredientsEntry.CONTENT_URI_INGREDIENTS, stepsContentValues);
+                Uri stepUri = context.getContentResolver().insert(RecipeContract.StepsEntry.CONTENT_URI_STEPS, stepsContentValues);
                 if (stepUri != null) {
                     Log.d(TAG, stepUri.toString());
                 }

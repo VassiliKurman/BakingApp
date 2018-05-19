@@ -76,7 +76,7 @@ public class RecipeContract {
         public static final Uri CONTENT_URI_STEPS =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_STEPS).build();
         // Steps table
-        public static final String TABLE_NAME_STEPS = "ingredients";
+        public static final String TABLE_NAME_STEPS = "steps";
         public final static String _ID = BaseColumns._ID;
         public static final String COLUMN_STEPS_ID = "step_id";
         public static final String COLUMN_STEPS_PARENT_ID = "recipe_id";

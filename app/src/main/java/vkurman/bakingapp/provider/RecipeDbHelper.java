@@ -40,7 +40,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
     /**
      * If the database schema changes, than the database version needs to be incremented
      */
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 1;
 
     // Constructor
     RecipeDbHelper(Context context) {
@@ -58,7 +58,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
 
         // Create a table to hold the steps data
         final String SQL_CREATE_STEPS_TABLE = "CREATE TABLE " + StepsEntry.TABLE_NAME_STEPS + " (" +
-                StepsEntry._ID + " INTEGER PRIMARY KEY," +
+                StepsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 StepsEntry.COLUMN_STEPS_ID + " INTEGER NOT NULL," +
                 StepsEntry.COLUMN_STEPS_PARENT_ID + " INTEGER NOT NULL, " +
                 StepsEntry.COLUMN_STEPS_SHORT_DESCRIPTION + " TEXT NOT NULL, " +
@@ -75,9 +75,9 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
                 IngredientsEntry.COLUMN_INGREDIENTS_INGREDIENT + " TEXT NOT NULL)";
 
         try {
-            sqLiteDatabase.execSQL(SQL_CREATE_RECIPES_TABLE);
             sqLiteDatabase.execSQL(SQL_CREATE_STEPS_TABLE);
             sqLiteDatabase.execSQL(SQL_CREATE_INGREDIENTS_TABLE);
+            sqLiteDatabase.execSQL(SQL_CREATE_RECIPES_TABLE);
         } catch (SQLException sqle) {
             Log.e(TAG, "SQL creating tables error" + sqle);
         }
@@ -85,6 +85,16 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        // For this project simply drop the table and create a new one.
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + IngredientsEntry.TABLE_NAME_INGREDIENTS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + StepsEntry.TABLE_NAME_STEPS);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RecipeEntry.TABLE_NAME_RECIPES);
+
+        onCreate(sqLiteDatabase);
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         // For this project simply drop the table and create a new one.
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + IngredientsEntry.TABLE_NAME_INGREDIENTS);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + StepsEntry.TABLE_NAME_STEPS);

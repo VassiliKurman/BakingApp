@@ -87,7 +87,7 @@ public class MasterListAdapter extends BaseAdapter {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < ingredients.length; i++) {
                     Ingredient ingredient = ingredients[i];
-                    String ing = String.format("- %s %d%s",
+                    String ing = String.format("- %s %s%s",
                             ingredient.getIngredient(),
                             ingredient.getQuantity(),
                             ingredient.getMeasure());
