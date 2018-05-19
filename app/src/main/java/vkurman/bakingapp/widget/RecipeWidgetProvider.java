@@ -45,10 +45,12 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingClickIntent = PendingIntent.getActivity(context, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.widget_root, pendingClickIntent);
         views.setTextViewText(R.id.tv_recipe_name, recipeId + " - " + recipeName);
-        // Set the list of ingredients for the specified recipe id
-        Intent adapterIntent = new Intent(context, RecipeWidgetService.class);
-        adapterIntent.setData(Uri.fromParts("content", String.valueOf(recipeId), null));
-        views.setRemoteAdapter(R.id.lv_widget_ingredients, adapterIntent);
+
+        // Set the list of ingredients for the specified recipe id using RemoteViewsService
+        Intent remoteAdapterIntent = new Intent(context, RecipeWidgetService.class);
+//        remoteAdapterIntent.setData(Uri.fromParts("content", String.valueOf(recipeId), null));
+        remoteAdapterIntent.putExtra("id", recipeId);
+        views.setRemoteAdapter(R.id.lv_widget_ingredients, remoteAdapterIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

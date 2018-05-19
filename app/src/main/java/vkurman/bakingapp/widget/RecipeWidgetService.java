@@ -37,9 +37,14 @@ public class RecipeWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        Log.d(TAG, "Received intent: " + intent);
         int id = Integer.valueOf(Objects.requireNonNull(intent.getData()).getSchemeSpecificPart());
         Log.d(TAG, "Received id: " + id);
         return new ListRemoteViewsFactory(getApplicationContext(), id);
+    }
+
+    private void handleActionUpdateRecipeWidget() {
+        // TODO
     }
 
     class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
@@ -67,7 +72,18 @@ public class RecipeWidgetService extends RemoteViewsService {
         }
 
         @Override
-        public void onDataSetChanged() {}
+        public void onDataSetChanged() {
+            Uri uri = RecipeContract.IngredientsEntry.CONTENT_URI_INGREDIENTS.buildUpon()
+                    .appendPath(String.valueOf(mRecipeId))
+                    .build();
+            if(mCursor != null) mCursor.close();
+            mCursor = mContext.getContentResolver().query(
+                    uri,
+                    null,
+                    null,
+                    null,
+                    null);
+        }
 
         @Override
         public void onDestroy() {
@@ -83,7 +99,6 @@ public class RecipeWidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int position) {
             if (mCursor == null || mCursor.getCount() == 0) return null;
-
             mCursor.moveToPosition(position);
             int quantityColumnIndex = mCursor.getColumnIndex(RecipeContract.IngredientsEntry.COLUMN_INGREDIENTS_QUANTITY);
             int measureColumnIndex = mCursor.getColumnIndex(RecipeContract.IngredientsEntry.COLUMN_INGREDIENTS_MEASURE);
@@ -93,7 +108,7 @@ public class RecipeWidgetService extends RemoteViewsService {
             String measure = mCursor.getString(measureColumnIndex);
             String ingredientName = mCursor.getString(nameColumnIndex);
 
-            RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.list_recipe_widget_layout);
+            RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.list_recipe_widget_provider_layout);
             views.setTextViewText(R.id.tv_widget_quantity, quantity);
             views.setTextViewText(R.id.tv_widget_measure, measure);
             views.setTextViewText(R.id.tv_widget_ingredient, ingredientName);

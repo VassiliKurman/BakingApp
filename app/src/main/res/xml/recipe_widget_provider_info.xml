@@ -3,7 +3,7 @@
     android:initialKeyguardLayout="@layout/recipe_widget_provider"
     android:initialLayout="@layout/recipe_widget_provider"
     android:minHeight="110dp"
-    android:minWidth="110dp"
+    android:minWidth="180dp"
     android:previewImage="@drawable/ic_ingredients"
     android:resizeMode="horizontal|vertical"
     android:configure="vkurman.bakingapp.widget.RecipeWidgetConfigurationActivity"
