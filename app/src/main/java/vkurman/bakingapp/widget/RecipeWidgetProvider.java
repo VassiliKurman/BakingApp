@@ -48,8 +48,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
         // Set the list of ingredients for the specified recipe id using RemoteViewsService
         Intent remoteAdapterIntent = new Intent(context, RecipeWidgetService.class);
-//        remoteAdapterIntent.setData(Uri.fromParts("content", String.valueOf(recipeId), null));
-        remoteAdapterIntent.putExtra("id", recipeId);
+        remoteAdapterIntent.setData(Uri.fromParts("content", String.valueOf(recipeId), null));
         views.setRemoteAdapter(R.id.lv_widget_ingredients, remoteAdapterIntent);
 
         // Instruct the widget manager to update the widget
@@ -59,6 +58,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // Do nothing in this implementation
+        // TODO use sharedPreferrences to get selected recipe in acivity
     }
 
     @Override
