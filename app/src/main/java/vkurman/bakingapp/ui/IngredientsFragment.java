@@ -67,7 +67,7 @@ public class IngredientsFragment extends Fragment {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < mIngredientsArray.length; i++) {
                     Ingredient ingredient = mIngredientsArray[i];
-                    String ing = String.format("- %s %d%s",
+                    String ing = String.format("- %s %s%s",
                             ingredient.getIngredient(),
                             ingredient.getQuantity(),
                             ingredient.getMeasure());
