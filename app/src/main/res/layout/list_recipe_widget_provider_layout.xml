@@ -32,6 +32,6 @@
         android:id="@+id/tv_widget_ingredient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_padding"
+        android:paddingStart="@dimen/default_padding"
         tools:text="Ingredient"/>
 </LinearLayout>
