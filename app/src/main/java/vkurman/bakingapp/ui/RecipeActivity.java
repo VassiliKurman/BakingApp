@@ -31,12 +31,14 @@ import vkurman.bakingapp.models.Step;
 import vkurman.bakingapp.utils.BakingAppConstants;
 
 /**
- * RecipeActivity
+ * RecipeActivity displays recipe ingredients and steps. In case of two pane
+ * layout in addition to master layout it displays selected step details as well.
  */
 public class RecipeActivity extends AppCompatActivity implements MasterListFragment.OnItemSelectedListener {
 
     private static final String TAG = "RecipeActivity";
     private static final String STEP_ID = "stepId";
+    private static final String RECIPE = "recipe";
     // Variables to store the values for recipe
     private Recipe mRecipe;
     private int currentStep;
@@ -51,54 +53,56 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
         setContentView(R.layout.activity_recipe);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        if (intent == null) {
-            closeOnError();
-        }
-        mRecipe = intent.getParcelableExtra("recipe");
-        if(mRecipe != null) {
-            // Setting title for title bar
-            getSupportActionBar().setTitle(mRecipe.getName());
-            // Getting reference to FragmentManager
-            final FragmentManager fragmentManager = getSupportFragmentManager();
-            final MasterListFragment fragment = (MasterListFragment) fragmentManager.findFragmentById(R.id.master_list_fragment);
-            if (fragment == null) {
-                Log.e(TAG, "Can't get ref to MasterListFragment");
-                return;
-            } else {
-                fragment.setRecipe(mRecipe);
+        if(savedInstanceState != null) {
+            mRecipe = savedInstanceState.getParcelable(RECIPE);
+            currentStep = savedInstanceState.getInt(STEP_ID, 0);
+        } else {
+            Intent intent = getIntent();
+            if (intent == null) {
+                closeOnError();
             }
-
-            // Determine if you're creating a two-pane or single-pane display
-            if (findViewById(R.id.recipe_details_linear_layout) != null) {
-                // This LinearLayout will only initially exist in the two-pane tablet case
-                mTwoPane = true;
-                if (savedInstanceState != null) {
-                    currentStep = savedInstanceState.getInt(STEP_ID, 0);
-                }
-                final Step step = mRecipe.getSteps()[currentStep];
-                if (step.getVideoURL() != null) {
-                    MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
-                    mediaPlayerFragment.setVideoUrl(step.getVideoURL());
-                    fragmentManager.beginTransaction()
-                            .add(R.id.media_container, mediaPlayerFragment)
-                            .commit();
-                } else if (step.getThumbnailURL() != null) {
-                    ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
-                    thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
-                    fragmentManager.beginTransaction()
-                            .add(R.id.media_container, thumbnailFragment)
-                            .commit();
+            mRecipe = intent.getParcelableExtra("recipe");
+            if (mRecipe != null) {
+                // Setting title for title bar
+                getSupportActionBar().setTitle(mRecipe.getName());
+                // Getting reference to FragmentManager
+                final FragmentManager fragmentManager = getSupportFragmentManager();
+                final MasterListFragment fragment = (MasterListFragment) fragmentManager.findFragmentById(R.id.master_list_fragment);
+                if (fragment == null) {
+                    Log.e(TAG, "Can't get ref to MasterListFragment");
+                    return;
+                } else {
+                    fragment.setRecipe(mRecipe);
                 }
 
-                StepInstructionsFragment stepFragment = new StepInstructionsFragment();
-                stepFragment.setStep(step);
-                fragmentManager.beginTransaction()
-                        .add(R.id.recipe_step_container, stepFragment)
-                        .commit();
-            } else {
-                // We're in single-pane mode and displaying fragments on a phone in separate activities
-                mTwoPane = false;
+                // Determine if you're creating a two-pane or single-pane display
+                if (findViewById(R.id.recipe_details_linear_layout) != null) {
+                    // This LinearLayout will only initially exist in the two-pane tablet case
+                    mTwoPane = true;
+                    final Step step = mRecipe.getSteps()[currentStep];
+                    if (step.getVideoURL() != null) {
+                        MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
+                        mediaPlayerFragment.setVideoUrl(step.getVideoURL());
+                        fragmentManager.beginTransaction()
+                                .add(R.id.media_container, mediaPlayerFragment)
+                                .commit();
+                    } else if (step.getThumbnailURL() != null) {
+                        ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
+                        thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
+                        fragmentManager.beginTransaction()
+                                .add(R.id.media_container, thumbnailFragment)
+                                .commit();
+                    }
+
+                    StepInstructionsFragment stepFragment = new StepInstructionsFragment();
+                    stepFragment.setStep(step);
+                    fragmentManager.beginTransaction()
+                            .add(R.id.recipe_step_container, stepFragment)
+                            .commit();
+                } else {
+                    // We're in single-pane mode and displaying fragments on a phone in separate activities
+                    mTwoPane = false;
+                }
             }
         }
     }
@@ -174,6 +178,7 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(STEP_ID, currentStep);
+        outState.putParcelable(RECIPE, mRecipe);
     }
 
     /**

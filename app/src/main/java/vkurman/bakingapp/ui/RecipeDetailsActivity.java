@@ -36,12 +36,15 @@ import vkurman.bakingapp.utils.BakingAppConstants;
  * RecipeDetailsActivity displays details about ingredients or selected step in recipe.
  */
 public class RecipeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String RECIPE = "recipe";
+    private static final String STEP_ID = "stepId";
     /**
      * Reference to recipe
      */
     private Recipe mRecipe;
     /**
-     * Reference to step id and value -1 for ingredients
+     * Reference to step id
      */
     private int mId;
     /**
@@ -63,22 +66,27 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
         getSupportActionBar().setTitle(R.string.title_details_activity);
         // Binding views
         ButterKnife.bind(this);
-        // Retrieving recipe and id
-        mRecipe = getIntent().getParcelableExtra(BakingAppConstants.INTENT_NAME_FOR_RECIPE);
-        mId = getIntent().getIntExtra(BakingAppConstants.INTENT_NAME_FOR_STEP_ID, -1);
-        // Add the fragment to its container using a FragmentManager and a Transaction
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if(mRecipe != null && mId >= 0 && mId < mRecipe.getSteps().length) {
-            Step step = mRecipe.getSteps()[mId];
-            displayStep(fragmentManager, step);
-        }
-        // Setting onClickListeners
-        mPreviousButton.setOnClickListener(this);
-        mNextButton.setOnClickListener(this);
-        if(mId == 0) {
-            mPreviousButton.setVisibility(View.INVISIBLE);
-        } else if (mId == mRecipe.getSteps().length - 1) {
-            mNextButton.setVisibility(View.INVISIBLE);
+        if(savedInstanceState != null) {
+            mRecipe = savedInstanceState.getParcelable(RECIPE);
+            mId = savedInstanceState.getInt(STEP_ID);
+        } else {
+            // Retrieving recipe and id
+            mRecipe = getIntent().getParcelableExtra(BakingAppConstants.INTENT_NAME_FOR_RECIPE);
+            mId = getIntent().getIntExtra(BakingAppConstants.INTENT_NAME_FOR_STEP_ID, -1);
+            // Add the fragment to its container using a FragmentManager and a Transaction
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (mRecipe != null && mId >= 0 && mId < mRecipe.getSteps().length) {
+                Step step = mRecipe.getSteps()[mId];
+                displayStep(fragmentManager, step);
+            }
+            // Setting onClickListeners
+            mPreviousButton.setOnClickListener(this);
+            mNextButton.setOnClickListener(this);
+            if (mId == 0) {
+                mPreviousButton.setVisibility(View.INVISIBLE);
+            } else if (mId == mRecipe.getSteps().length - 1) {
+                mNextButton.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -122,6 +130,10 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
     }
 
     // TODO check for correctness
+    /**
+     * Replaces current step with new one.
+     * @param step
+     */
     private void replaceStep(Step step) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -145,6 +157,13 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
         int stepContainerID = R.id.recipe_step_container;
         fragmentTransaction.replace(stepContainerID, stepFragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STEP_ID, mId);
+        outState.putParcelable(RECIPE, mRecipe);
     }
 
     @Override
