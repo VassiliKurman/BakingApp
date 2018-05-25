@@ -9,15 +9,14 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.-->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/playerview_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="vkurman.bakingapp.ui.MediaPlayerFragment" >
 
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/playerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</FrameLayout>
+<!-- Vector drawable downloaded from https://materialdesignicons.com/ and developed by Austin Andrews @Templarian.
+ The colour changed. -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="24dp"
+    android:width="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path android:fillColor="#000" android:pathData="M19.5,3.09L20.91,4.5L16.41,9H20V11H13V4H15V7.59L19.5,3.09M20.91,19.5L19.5,20.91L15,16.41V20H13V13H20V15H16.41L20.91,19.5M4.5,3.09L9,7.59V4H11V11H4V9H7.59L3.09,4.5L4.5,3.09M3.09,19.5L7.59,15H4V13H11V20H9V16.41L4.5,20.91L3.09,19.5Z" />
+</vector>

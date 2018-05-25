@@ -15,16 +15,20 @@
 */
 package vkurman.bakingapp.ui;
 
+import android.app.Dialog;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -65,6 +69,14 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
      */
     private static final String VIDEO_URL_KEY = "videoUrl";
     /**
+     * Key for window saving state
+     */
+//    private final String STATE_RESUME_WINDOW = "resumeWindow";
+    /**
+     * Key for full screen saving state
+     */
+//    private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
+    /**
      * URL for the video.
      */
     private String mVideoUrl;
@@ -88,6 +100,22 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
      * Exoplayer state on device state change
      */
     private boolean mVideoState;
+    /**
+     * Dialog for full screen player view
+     */
+//    private Dialog mFullScreenDialog;
+    /**
+     * Full screen icon
+     */
+//    private ImageView mFullScreenIcon;
+    /**
+     *
+     */
+//    private boolean mFullScreen;
+    /**
+     *
+     */
+//    private int mResumeWindow;
 
     /**
      * Empty constructor
@@ -104,6 +132,9 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
             mVideoUrl = savedInstanceState.getString(VIDEO_URL_KEY);
             mVideoPosition = savedInstanceState.getLong(EXOPLAYER_POSITION_KEY);
             mVideoState = savedInstanceState.getBoolean(EXOPLAYER__STATE_KEY);
+            // Full screen state
+//            mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
+//            mFullScreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
         }
         // Inflate the MediaPlayerFragment fragment layout
         View rootView = inflater.inflate(R.layout.fragment_media_player, container, false);
@@ -137,6 +168,11 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
         currentState.putString(VIDEO_URL_KEY, mVideoUrl);
         currentState.putLong(EXOPLAYER_POSITION_KEY, mVideoPosition);
         currentState.putBoolean(EXOPLAYER__STATE_KEY, mVideoState);
+        // Full screen state
+//        currentState.putInt(STATE_RESUME_WINDOW, mResumeWindow);
+//        currentState.putBoolean(STATE_PLAYER_FULLSCREEN, mFullScreen);
+
+//        super.onSaveInstanceState(currentState);
     }
 
     /**
@@ -192,6 +228,8 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
         if (mExoPlayer != null) {
             mVideoState = mExoPlayer.getPlayWhenReady();
             mVideoPosition = mExoPlayer.getCurrentPosition();
+
+//            mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
             releasePlayer();
         }
     }
@@ -239,6 +277,32 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
     public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {}
     @Override
     public void onSeekProcessed() {}
+
+//    private void initFullscreenDialog() {
+//        mFullScreenDialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+//            public void onBackPressed() {
+//                if (mFullScreen)
+//                    closeFullscreenDialog();
+//                super.onBackPressed();
+//            }
+//        };
+//    }
+//
+//    private void openFullscreenDialog() {
+//        ((ViewGroup) mPlayerView.getParent()).removeView(mPlayerView);
+//        mFullScreenDialog.addContentView(mPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.collapse_icon));
+//        mFullScreen = true;
+//        mFullScreenDialog.show();
+//    }
+//
+//    private void closeFullscreenDialog() {
+//        ((ViewGroup) mPlayerView.getParent()).removeView(mPlayerView);
+//        ((FrameLayout) getActivity().findViewById(R.id.playerview_container)).addView(mPlayerView);
+//        mFullScreen = false;
+//        mFullScreenDialog.dismiss();
+//        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.expand_icon));
+//    }
 
     /**
      * Media Session Callbacks, where all external clients control the player.
