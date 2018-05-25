@@ -74,6 +74,7 @@ public class RecipeWidgetService extends RemoteViewsService {
             if(mContext != null) {
                 SharedPreferences sharedPreferences = mContext.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                 mRecipeId = sharedPreferences.getInt(getString(R.string.saved_recipe_id_key), 1);
+                Log.d(TAG, "Retrieved recipe id: " + mRecipeId);
             }
 
             Uri uri = RecipeContract.IngredientsEntry.CONTENT_URI_INGREDIENTS.buildUpon()

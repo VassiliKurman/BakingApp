@@ -15,6 +15,8 @@
 */
 package vkurman.bakingapp.utils;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -37,6 +39,7 @@ import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
 import vkurman.bakingapp.provider.RecipeContract;
 import vkurman.bakingapp.provider.RecipeDbHelper;
+import vkurman.bakingapp.widget.RecipeWidgetProvider;
 
 /**
  * RecipeUtils class is a helper class that handles tasks such as creating URL and getting response
@@ -198,8 +201,11 @@ public class RecipeUtils {
         editor.putString(context.getString(R.string.saved_recipe_name_key), recipeName);
         editor.apply();
         // Notifying AppWidgetManager about data change
-//        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-//        int[] ids = appWidgetManager.getAppWidgetIds(?);
-//        appWidgetManager.notifyAppWidgetViewDataChanged(ids, ?);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName widgetComponent = new ComponentName(context, RecipeWidgetProvider.class);
+        int[] widgetIds = appWidgetManager.getAppWidgetIds(widgetComponent);
+        for(int id : widgetIds) {
+            RecipeWidgetProvider.updateAppWidget(context, appWidgetManager, id, recipeId, recipeName);
+        }
     }
 }

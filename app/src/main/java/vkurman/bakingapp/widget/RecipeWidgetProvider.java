@@ -35,7 +35,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     private int mRecipeId;
     private String mRecipeName;
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, int recipeId, String recipeName) {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
