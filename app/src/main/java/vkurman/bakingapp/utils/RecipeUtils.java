@@ -199,7 +199,7 @@ public class RecipeUtils {
         editor.apply();
         // Notifying AppWidgetManager about data change
 //        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-//        appWidgetManager.getAppWidgetIds(vkurman.bakingapp.widget.RecipeWidgetProvider);
-//        .notifyAll();
+//        int[] ids = appWidgetManager.getAppWidgetIds(?);
+//        appWidgetManager.notifyAppWidgetViewDataChanged(ids, ?);
     }
 }
