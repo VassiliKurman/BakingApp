@@ -57,6 +57,8 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
         if(savedInstanceState != null) {
             mRecipe = savedInstanceState.getParcelable(RECIPE);
             currentStep = savedInstanceState.getInt(STEP_ID, 0);
+            // Load MasterListFragment
+            loadMasterFragment();
         } else {
             Intent intent = getIntent();
             if (intent == null) {
@@ -64,22 +66,14 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
             }
             mRecipe = intent.getParcelableExtra("recipe");
             if (mRecipe != null) {
-                // Setting title for title bar
-                getSupportActionBar().setTitle(mRecipe.getName());
-                // Getting reference to FragmentManager
-                final FragmentManager fragmentManager = getSupportFragmentManager();
-                final MasterListFragment fragment = (MasterListFragment) fragmentManager.findFragmentById(R.id.master_list_fragment);
-                if (fragment == null) {
-                    Log.e(TAG, "Can't get ref to MasterListFragment");
-                    return;
-                } else {
-                    fragment.setRecipe(mRecipe);
-                }
+                // Load MasterListFragment
+                loadMasterFragment();
 
                 // Determine if you're creating a two-pane or single-pane display
                 if (findViewById(R.id.recipe_details_linear_layout) != null) {
                     // This LinearLayout will only initially exist in the two-pane tablet case
                     mTwoPane = true;
+                    final FragmentManager fragmentManager = getSupportFragmentManager();
                     final Step step = mRecipe.getSteps()[currentStep];
                     if (step.getVideoURL() != null) {
                         MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
@@ -105,6 +99,23 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
                     mTwoPane = false;
                 }
             }
+        }
+    }
+
+    /**
+     * Loading MasterListFragment into activity using FragmentManager
+     */
+    private void loadMasterFragment() {
+        // Setting title for title bar
+        getSupportActionBar().setTitle(mRecipe.getName());
+        // Getting reference to FragmentManager
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final MasterListFragment fragment = (MasterListFragment) fragmentManager.findFragmentById(R.id.master_list_fragment);
+        if (fragment == null) {
+            Log.e(TAG, "Can't get ref to MasterListFragment");
+            return;
+        } else {
+            fragment.setRecipe(mRecipe);
         }
     }
 
