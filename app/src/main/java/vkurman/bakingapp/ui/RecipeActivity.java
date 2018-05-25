@@ -29,6 +29,7 @@ import vkurman.bakingapp.R;
 import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
 import vkurman.bakingapp.utils.BakingAppConstants;
+import vkurman.bakingapp.utils.RecipeUtils;
 
 /**
  * RecipeActivity displays recipe ingredients and steps. In case of two pane
@@ -166,8 +167,7 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
                 finish();
                 return true;
             case R.id.action_show_widget:
-                // TODO
-                Toast.makeText(this, "Widget clicked", Toast.LENGTH_LONG).show();
+                RecipeUtils.updateWidgetData(this, mRecipe);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

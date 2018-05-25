@@ -20,6 +20,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
@@ -32,6 +33,9 @@ import vkurman.bakingapp.utils.BakingAppConstants;
  * Implementation of App Widget functionality.
  */
 public class RecipeWidgetProvider extends AppWidgetProvider {
+
+    private int mRecipeId;
+    private String mRecipeName;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, int recipeId, String recipeName) {
@@ -57,8 +61,21 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // Do nothing in this implementation
-        // TODO use sharedPreferrences to get selected recipe in acivity
+        if(context != null) {
+            // Getting up to date data from shared preferences
+            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            mRecipeId = sharedPreferences.getInt(context.getString(R.string.saved_recipe_id_key), mRecipeId);
+            mRecipeName = sharedPreferences.getString(context.getString(R.string.saved_recipe_name_key), mRecipeName);
+            // Notifying widget about update
+            for (int appWidgetId: appWidgetIds) {
+                updateAppWidget(
+                        context,
+                        appWidgetManager,
+                        appWidgetId,
+                        mRecipeId,
+                        mRecipeName);
+            }
+        }
     }
 
     @Override

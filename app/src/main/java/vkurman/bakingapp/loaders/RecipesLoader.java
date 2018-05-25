@@ -55,7 +55,9 @@ public class RecipesLoader extends AsyncTaskLoader<List<Recipe>> {
             Log.d(TAG, "Recipes JSON length: " + json.length());
             // Saving data to database
             List<Recipe> recipes = JsonUtils.parseRecipeJson(json);
-            RecipeUtils.saveRecipes(getContext(), recipes);
+            if(!RecipeUtils.isDbExists(getContext())) {
+                RecipeUtils.saveRecipes(getContext(), recipes);
+            }
             return recipes;
         } catch (IOException e) {
             Log.e(TAG, "Exception getting response from web");

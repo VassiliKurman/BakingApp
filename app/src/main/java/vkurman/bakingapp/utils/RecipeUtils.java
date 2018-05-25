@@ -17,6 +17,9 @@ package vkurman.bakingapp.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.util.Log;
 
@@ -28,10 +31,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.Scanner;
 
+import vkurman.bakingapp.R;
 import vkurman.bakingapp.models.Ingredient;
 import vkurman.bakingapp.models.Recipe;
 import vkurman.bakingapp.models.Step;
 import vkurman.bakingapp.provider.RecipeContract;
+import vkurman.bakingapp.provider.RecipeDbHelper;
 
 /**
  * RecipeUtils class is a helper class that handles tasks such as creating URL and getting response
@@ -140,5 +145,61 @@ public class RecipeUtils {
                 }
             }
         }
+    }
+
+    /**
+     * Check if the database exist and can be read.
+     * Code snippet taken from:
+     * <code>https://stackoverflow.com/questions/3386667/query-if-android-database-exists?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa</code>
+     *
+     * @return true if it exists and can be read, false if it doesn't
+     */
+    public static boolean isDbExists(Context context) {
+        SQLiteDatabase checkDB = null;
+        try {
+            checkDB = SQLiteDatabase.openDatabase(context.getDatabasePath(RecipeDbHelper.DATABASE_NAME).toString(), null,
+                    SQLiteDatabase.OPEN_READONLY);
+            checkDB.close();
+        } catch (SQLiteException e) {
+            // database doesn't exist yet.
+        }
+        return checkDB != null;
+    }
+
+    /**
+     * Saves data to sSharedPreferences and notifies WidgetManager about update
+     *
+     * @param context - Context
+     * @param recipe - Recipe
+     */
+    public static void updateWidgetData(Context context, Recipe recipe) {
+        if(context == null || recipe == null) {
+            Log.e(TAG, "Provided parameter is NULL: " + context == null ? "context" : "recipe");
+            return;
+        }
+        updateWidgetData(context, recipe.getId(), recipe.getName());
+    }
+
+    /**
+     * Saves data to sSharedPreferences and notifies WidgetManager about update
+     *
+     * @param context - Context
+     * @param recipeId - id for recipe
+     * @param recipeName - name of recipe
+     */
+    public static void updateWidgetData(Context context, int recipeId, String recipeName) {
+        if(context == null || recipeId < 0 || recipeName == null) {
+            Log.e(TAG, "Provided parameter is NOT valid: " + (recipeId < 0 ? "recipeId" : context == null ? "context" : "recipeName"));
+            return;
+        }
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(context.getString(R.string.saved_recipe_id_key), recipeId);
+        editor.putString(context.getString(R.string.saved_recipe_name_key), recipeName);
+        editor.apply();
+        // Notifying AppWidgetManager about data change
+//        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+//        appWidgetManager.getAppWidgetIds(vkurman.bakingapp.widget.RecipeWidgetProvider);
+//        .notifyAll();
     }
 }

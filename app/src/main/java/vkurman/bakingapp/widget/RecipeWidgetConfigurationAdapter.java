@@ -29,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import vkurman.bakingapp.R;
 import vkurman.bakingapp.provider.RecipeContract;
+import vkurman.bakingapp.utils.RecipeUtils;
 
 /**
  * RecipeWidgetConfigurationAdapter adapter class for RecycleView
@@ -95,12 +96,15 @@ public class RecipeWidgetConfigurationAdapter extends RecyclerView.Adapter<Recip
             mCursor.moveToPosition(adapterPosition);
             int idColumnIndex = mCursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_RECIPES_ID);
             int nameColumnIndex = mCursor.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_RECIPES_NAME);
-            Log.d(TAG, "Recipe for widget selected: " +
-                    mCursor.getInt(idColumnIndex) + " " +
-                    mCursor.getString(nameColumnIndex));
-            mRecipeClickListener.onRecipeWidgetConfigurationClicked(
-                    mCursor.getInt(idColumnIndex),
-                    mCursor.getString(nameColumnIndex));
+            // Recipe details
+            int recipeId = mCursor.getInt(idColumnIndex);
+            String recipeName = mCursor.getString(nameColumnIndex);
+            // Writing log message
+            Log.d(TAG, "Recipe for widget selected: " + recipeId + " " + recipeName);
+            // Writing details to shared preferences
+            RecipeUtils.updateWidgetData(view.getContext(), recipeId, recipeName);
+            // Sending data to click listener
+            mRecipeClickListener.onRecipeWidgetConfigurationClicked(recipeId, recipeName);
         }
     }
 

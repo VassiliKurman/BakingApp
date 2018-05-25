@@ -36,7 +36,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
     /**
      * The database name
      */
-    private static final String DATABASE_NAME = "recipes.db";
+    public static final String DATABASE_NAME = "recipes.db";
     /**
      * If the database schema changes, than the database version needs to be incremented
      */

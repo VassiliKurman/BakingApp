@@ -17,6 +17,7 @@ package vkurman.bakingapp.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
@@ -43,13 +44,9 @@ public class RecipeWidgetService extends RemoteViewsService {
         return new ListRemoteViewsFactory(getApplicationContext(), id);
     }
 
-    private void handleActionUpdateRecipeWidget() {
-        // TODO
-    }
-
     class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         final Context mContext;
-        final int mRecipeId;
+        int mRecipeId;
         Cursor mCursor;
 
         ListRemoteViewsFactory(Context context, int recipeId) {
@@ -73,6 +70,12 @@ public class RecipeWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
+            // Trying to retrieve data from sharedPreferences
+            if(mContext != null) {
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                mRecipeId = sharedPreferences.getInt(getString(R.string.saved_recipe_id_key), 1);
+            }
+
             Uri uri = RecipeContract.IngredientsEntry.CONTENT_URI_INGREDIENTS.buildUpon()
                     .appendPath(String.valueOf(mRecipeId))
                     .build();
