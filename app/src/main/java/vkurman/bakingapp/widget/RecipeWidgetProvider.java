@@ -26,8 +26,6 @@ import android.widget.RemoteViews;
 
 import vkurman.bakingapp.R;
 import vkurman.bakingapp.RecipesActivity;
-import vkurman.bakingapp.ui.RecipeDetailsActivity;
-import vkurman.bakingapp.utils.BakingAppConstants;
 
 /**
  * Implementation of App Widget functionality.
@@ -42,9 +40,6 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
         // Create an Intent to launch RecipeDetailsActivity
-//        Intent clickIntent = new Intent(context, RecipeDetailsActivity.class);
-//        clickIntent.putExtra(BakingAppConstants.INTENT_NAME_FOR_RECIPE_ID, recipeId);
-//        clickIntent.putExtra(BakingAppConstants.INTENT_NAME_FOR_RECIPE_NAME, recipeName);
         Intent clickIntent = new Intent(context, RecipesActivity.class);
         PendingIntent pendingClickIntent = PendingIntent.getActivity(context, 0, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.widget_root, pendingClickIntent);
