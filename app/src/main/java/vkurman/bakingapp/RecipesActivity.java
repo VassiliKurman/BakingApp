@@ -59,7 +59,7 @@ public class RecipesActivity extends AppCompatActivity implements
         mAdapter = new RecipesAdapter(this, null, this);
         mRecyclerView.setAdapter(mAdapter);
 
-        RecipeCountingIdlingRecource.increment();
+//        RecipeCountingIdlingRecource.increment();
         // Setting loaders
         getSupportLoaderManager().initLoader(0, null, this).forceLoad();
     }
@@ -82,7 +82,7 @@ public class RecipesActivity extends AppCompatActivity implements
         } else {
             mAdapter.updateData(data);
         }
-        RecipeCountingIdlingRecource.decrement();
+//        RecipeCountingIdlingRecource.decrement();
     }
 
     @Override

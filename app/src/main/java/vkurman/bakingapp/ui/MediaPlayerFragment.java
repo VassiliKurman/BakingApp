@@ -15,20 +15,23 @@
 */
 package vkurman.bakingapp.ui;
 
-import android.app.Dialog;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -57,6 +60,10 @@ import vkurman.bakingapp.R;
 public class MediaPlayerFragment extends Fragment implements Player.EventListener {
 
     /**
+     * Tag fo logging
+     */
+    private static final String TAG = MediaPlayerFragment.class.getSimpleName();
+    /**
      * Key to save exoplayer playing position
      */
     private static final String EXOPLAYER_POSITION_KEY = "position_key";
@@ -68,14 +75,6 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
      * Key to save videoUrl
      */
     private static final String VIDEO_URL_KEY = "videoUrl";
-    /**
-     * Key for window saving state
-     */
-//    private final String STATE_RESUME_WINDOW = "resumeWindow";
-    /**
-     * Key for full screen saving state
-     */
-//    private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
     /**
      * URL for the video.
      */
@@ -100,22 +99,6 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
      * Exoplayer state on device state change
      */
     private boolean mVideoState;
-    /**
-     * Dialog for full screen player view
-     */
-//    private Dialog mFullScreenDialog;
-    /**
-     * Full screen icon
-     */
-//    private ImageView mFullScreenIcon;
-    /**
-     *
-     */
-//    private boolean mFullScreen;
-    /**
-     *
-     */
-//    private int mResumeWindow;
 
     /**
      * Empty constructor
@@ -132,9 +115,6 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
             mVideoUrl = savedInstanceState.getString(VIDEO_URL_KEY);
             mVideoPosition = savedInstanceState.getLong(EXOPLAYER_POSITION_KEY);
             mVideoState = savedInstanceState.getBoolean(EXOPLAYER__STATE_KEY);
-            // Full screen state
-//            mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
-//            mFullScreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
         }
         // Inflate the MediaPlayerFragment fragment layout
         View rootView = inflater.inflate(R.layout.fragment_media_player, container, false);
@@ -168,11 +148,6 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
         currentState.putString(VIDEO_URL_KEY, mVideoUrl);
         currentState.putLong(EXOPLAYER_POSITION_KEY, mVideoPosition);
         currentState.putBoolean(EXOPLAYER__STATE_KEY, mVideoState);
-        // Full screen state
-//        currentState.putInt(STATE_RESUME_WINDOW, mResumeWindow);
-//        currentState.putBoolean(STATE_PLAYER_FULLSCREEN, mFullScreen);
-
-//        super.onSaveInstanceState(currentState);
     }
 
     /**
@@ -182,6 +157,39 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
      */
     private void initialisePlayer(Uri mediaUri) {
         if (mExoPlayer == null) {
+            // If starting to play a video or play button is clicked and if in landscape mode
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (getActivity() != null) {
+                    // Hide action and status bar
+                    View decorView = getActivity().getWindow().getDecorView();
+                    decorView.setSystemUiVisibility(
+                            // Set the content to appear under the system bars so that the
+                            // content doesn't resize when the system bars hide and show.
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                    // Hide the nav bar and status bar
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN);
+                    // Set the player view size same as the screen size
+                    DisplayMetrics displayMetrics = new DisplayMetrics();
+                    WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+                    if (windowManager != null) windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+                    float[] screenSize = new float[]{
+                            (float) displayMetrics.widthPixels,
+                            (float) displayMetrics.heightPixels,
+                            displayMetrics.density};
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mPlayerView.getLayoutParams();
+                    params.width = (int) screenSize[0];
+                    params.height = (int) screenSize[1];
+
+                    Log.e(TAG, "Width: " + params.width);
+                    Log.e(TAG, "Width: " + params.height);
+
+                    mPlayerView.setLayoutParams(params);
+                }
+            }
+
             // Create an instance of the ExoPlayer.
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
@@ -229,7 +237,6 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
             mVideoState = mExoPlayer.getPlayWhenReady();
             mVideoPosition = mExoPlayer.getCurrentPosition();
 
-//            mResumeWindow = mPlayerView.getPlayer().getCurrentWindowIndex();
             releasePlayer();
         }
     }
@@ -254,9 +261,6 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
                     PlaybackStateCompat.STATE_PLAYING,
                     mExoPlayer.getCurrentPosition(),
                     1f);
-
-            // TODO show full screen on landscape mode
-
         } else if(playbackState == Player.STATE_READY) {
             mStateBuilder.setState(
                     PlaybackStateCompat.STATE_PAUSED,
@@ -277,32 +281,6 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
     public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {}
     @Override
     public void onSeekProcessed() {}
-
-//    private void initFullscreenDialog() {
-//        mFullScreenDialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
-//            public void onBackPressed() {
-//                if (mFullScreen)
-//                    closeFullscreenDialog();
-//                super.onBackPressed();
-//            }
-//        };
-//    }
-//
-//    private void openFullscreenDialog() {
-//        ((ViewGroup) mPlayerView.getParent()).removeView(mPlayerView);
-//        mFullScreenDialog.addContentView(mPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-//        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.collapse_icon));
-//        mFullScreen = true;
-//        mFullScreenDialog.show();
-//    }
-//
-//    private void closeFullscreenDialog() {
-//        ((ViewGroup) mPlayerView.getParent()).removeView(mPlayerView);
-//        ((FrameLayout) getActivity().findViewById(R.id.playerview_container)).addView(mPlayerView);
-//        mFullScreen = false;
-//        mFullScreenDialog.dismiss();
-//        mFullScreenIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.expand_icon));
-//    }
 
     /**
      * Media Session Callbacks, where all external clients control the player.

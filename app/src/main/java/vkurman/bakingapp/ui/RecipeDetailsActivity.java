@@ -16,10 +16,12 @@
 
 package vkurman.bakingapp.ui;
 
+import android.content.res.Configuration;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,6 +39,7 @@ import vkurman.bakingapp.utils.BakingAppConstants;
  */
 public class RecipeDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = RecipeDetailsActivity.class.getSimpleName();
     private static final String RECIPE = "recipe";
     private static final String STEP_ID = "stepId";
     /**
@@ -79,14 +82,15 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
                 Step step = mRecipe.getSteps()[mId];
                 displayStep(fragmentManager, step);
             }
-            // Setting onClickListeners
-            mPreviousButton.setOnClickListener(this);
-            mNextButton.setOnClickListener(this);
-            if (mId == 0) {
-                mPreviousButton.setVisibility(View.INVISIBLE);
-            } else if (mId == mRecipe.getSteps().length - 1) {
-                mNextButton.setVisibility(View.INVISIBLE);
-            }
+        }
+        mStepNumber.setText(String.valueOf(mId));
+        // Setting onClickListeners
+        mPreviousButton.setOnClickListener(this);
+        mNextButton.setOnClickListener(this);
+        if (mId == 0) {
+            mPreviousButton.setVisibility(View.INVISIBLE);
+        } else if (mId == mRecipe.getSteps().length - 1) {
+            mNextButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -102,10 +106,10 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
-     * Displays step fragments.
+     * Displays step fragments at the first start of this activity.
      *
-     * @param fragmentManager
-     * @param step
+     * @param fragmentManager - reference to FragmentManager
+     * @param step - step to display
      */
     private void displayStep(FragmentManager fragmentManager, Step step) {
         if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
@@ -114,6 +118,10 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
             fragmentManager.beginTransaction()
                     .add(R.id.media_container, mediaPlayerFragment)
                     .commit();
+
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                Log.d(TAG, "Setting for landscape mode");
+            }
         } else if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
             ThumbnailFragment thumbnailFragment = new ThumbnailFragment();
             thumbnailFragment.setThumbnailUrl(step.getThumbnailURL());
@@ -129,10 +137,9 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
                 .commit();
     }
 
-    // TODO check for correctness
     /**
      * Replaces current step with new one.
-     * @param step
+     * @param step - new step
      */
     private void replaceStep(Step step) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -168,7 +175,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View view) {
-        // TODO check loading device
         if(view == mPreviousButton) {
             if (mId > 0) {
                 mId--;
