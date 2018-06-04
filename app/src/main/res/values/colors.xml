@@ -5,6 +5,6 @@
     <color name="colorAccent">#F56262</color>
 
     <color name="colorError">#FF0000</color>
-    <color name="colorPlaceholder">@color/colorPrimary</color>
+    <color name="colorPlaceholder">@color/colorPrimaryDark</color>
     <color name="colorBackGround">#FFFE9F</color>
 </resources>

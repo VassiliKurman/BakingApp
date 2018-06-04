@@ -9,54 +9,64 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.-->
-
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="vkurman.bakingapp.ui.IngredientsFragment"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/default_padding">
+    android:layout_marginTop="@dimen/default_margin"
+    android:layout_marginLeft="@dimen/default_margin"
+    android:layout_marginRight="@dimen/default_margin"
+    android:padding="@dimen/default_padding"
+    app:cardBackgroundColor="@color/colorPrimary">
 
-    <ImageView
-        android:id="@+id/iv_list_recipe_image"
-        android:layout_width="@dimen/default_text_image_size"
-        android:layout_height="@dimen/default_text_image_size"
-        android:adjustViewBounds="true"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
-    <TextView
-        android:id="@+id/tv_list_recipe_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:paddingLeft="@dimen/default_padding"
-        app:layout_constraintLeft_toRightOf="@id/iv_list_recipe_image"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="@dimen/title_text_size"
-        tools:text="Recipe name"/>
-
-    <TextView
-        android:id="@+id/tv_list_servings_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_padding"
-        android:paddingBottom="@dimen/default_padding"
-        android:adjustViewBounds="true"
-        app:layout_constraintLeft_toLeftOf="@id/tv_list_recipe_text"
-        app:layout_constraintTop_toBottomOf="@id/tv_list_recipe_text"
-        android:textSize="@dimen/subtitle_text_size"
-        android:textColor="@color/colorPrimary"
-        tools:text="N% servings"/>
-
-    <FrameLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimary"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" >
-    </FrameLayout>
+        android:layout_height="match_parent" >
 
-</android.support.constraint.ConstraintLayout>
+        <ImageView
+            android:id="@+id/iv_list_recipe_image"
+            android:layout_width="@dimen/default_text_image_size"
+            android:layout_height="@dimen/default_text_image_size"
+            android:adjustViewBounds="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_list_recipe_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:paddingLeft="@dimen/default_padding"
+            app:layout_constraintLeft_toRightOf="@id/iv_list_recipe_image"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="@dimen/title_text_size"
+            tools:text="Recipe name"/>
+
+        <TextView
+            android:id="@+id/tv_list_servings_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingBottom="@dimen/default_padding"
+            android:adjustViewBounds="true"
+            app:layout_constraintLeft_toLeftOf="@id/tv_list_recipe_text"
+            app:layout_constraintTop_toBottomOf="@id/tv_list_recipe_text"
+            android:textSize="@dimen/subtitle_text_size"
+            android:textColor="@color/colorPlaceholder"
+            tools:text="N% servings"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" >
+        </FrameLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>
