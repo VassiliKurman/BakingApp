@@ -13,7 +13,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
 package vkurman.bakingapp;
 
 import android.content.Intent;
@@ -31,7 +30,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import vkurman.bakingapp.IdlingResource.RecipeCountingIdlingRecource;
 import vkurman.bakingapp.adapters.RecipesAdapter;
 import vkurman.bakingapp.loaders.RecipesLoader;
 import vkurman.bakingapp.models.Recipe;
@@ -59,7 +57,6 @@ public class RecipesActivity extends AppCompatActivity implements
         mAdapter = new RecipesAdapter(this, null, this);
         mRecyclerView.setAdapter(mAdapter);
 
-//        RecipeCountingIdlingRecource.increment();
         // Setting loaders
         getSupportLoaderManager().initLoader(0, null, this).forceLoad();
     }
@@ -82,7 +79,6 @@ public class RecipesActivity extends AppCompatActivity implements
         } else {
             mAdapter.updateData(data);
         }
-//        RecipeCountingIdlingRecource.decrement();
     }
 
     @Override
