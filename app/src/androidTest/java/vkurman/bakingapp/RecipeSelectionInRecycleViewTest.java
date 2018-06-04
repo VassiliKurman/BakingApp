@@ -15,12 +15,9 @@
 */
 package vkurman.bakingapp;
 
-import android.content.Intent;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
-import android.support.test.espresso.ViewAssertion;
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -32,23 +29,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import vkurman.bakingapp.IdlingResource.RecipeCountingIdlingRecource;
-import vkurman.bakingapp.ui.RecipeActivity;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
 import android.support.test.espresso.contrib.RecyclerViewActions;
-import android.util.Log;
 
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.containsString;
 
 /**
  * RecipeSelectionInRecycleViewTest - testing selection of recipe in the recycleview
@@ -58,8 +46,6 @@ import static org.hamcrest.Matchers.containsString;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class RecipeSelectionInRecycleViewTest {
-
-    private static final String RECIPE_NAME = "Nutella Pie";
 
     @Rule
     public ActivityTestRule<RecipesActivity> mActivityRule = new ActivityTestRule<>(RecipesActivity.class);
