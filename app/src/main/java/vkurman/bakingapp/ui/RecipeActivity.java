@@ -13,11 +13,11 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
 package vkurman.bakingapp.ui;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,10 +39,11 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
 
     private static final String TAG = "RecipeActivity";
     private static final String STEP_ID = "stepId";
+    private static final String TWO_PANE = "twoPane";
     private static final String RECIPE = "recipe";
     // Variables to store the values for recipe
     private Recipe mRecipe;
-    private int currentStep;
+    private int mCurrentStep;
 
     // Track whether to display a two-pane or single-pane UI
     // A single-pane display refers to phone screens, and two-pane to larger tablet screens
@@ -56,9 +57,10 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
 
         if(savedInstanceState != null) {
             mRecipe = savedInstanceState.getParcelable(RECIPE);
-            currentStep = savedInstanceState.getInt(STEP_ID, 0);
-            // Load MasterListFragment
-            loadMasterFragment();
+            mCurrentStep = savedInstanceState.getInt(STEP_ID, 0);
+            mTwoPane = savedInstanceState.getBoolean(TWO_PANE);
+            // Setting recipe to MasterListFragment
+            setRecipeToMasterFragment();
         } else {
             Intent intent = getIntent();
             if (intent == null) {
@@ -66,15 +68,15 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
             }
             mRecipe = intent.getParcelableExtra("recipe");
             if (mRecipe != null) {
-                // Load MasterListFragment
-                loadMasterFragment();
+                // Setting recipe to MasterListFragment
+                setRecipeToMasterFragment();
 
                 // Determine if you're creating a two-pane or single-pane display
-                if (findViewById(R.id.recipe_details_linear_layout) != null) {
+                if (findViewById(R.id.recipe_details_container) != null) {
                     // This LinearLayout will only initially exist in the two-pane tablet case
                     mTwoPane = true;
                     final FragmentManager fragmentManager = getSupportFragmentManager();
-                    final Step step = mRecipe.getSteps()[currentStep];
+                    final Step step = mRecipe.getSteps()[mCurrentStep];
                     if (step.getVideoURL() != null) {
                         MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
                         mediaPlayerFragment.setVideoUrl(step.getVideoURL());
@@ -105,7 +107,7 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
     /**
      * Loading MasterListFragment into activity using FragmentManager
      */
-    private void loadMasterFragment() {
+    private void setRecipeToMasterFragment() {
         // Setting title for title bar
         getSupportActionBar().setTitle(mRecipe.getName());
         // Getting reference to FragmentManager
@@ -124,13 +126,17 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
     public void onItemSelected(int position) {
         if(position > 0 && position <= mRecipe.getSteps().length) {
             // Handle the two-pane case and replace existing fragments right when a new step is selected from the master list
-            currentStep = position - 1;
+            mCurrentStep = position - 1;
             if (mTwoPane) {
                 // Create two=pane interaction
                 // Add the fragment to its container using a FragmentManager and a Transaction
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                final Step step = mRecipe.getSteps()[currentStep];
-
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                final Step step = mRecipe.getSteps()[mCurrentStep];
+                // Remove media fragment
+                if(fragmentManager.findFragmentById(R.id.media_container) != null) {
+                    fragmentTransaction.remove(fragmentManager.findFragmentById(R.id.media_container));
+                }
                 if (step.getVideoURL() != null) {
                     MediaPlayerFragment mediaPlayerFragment = new MediaPlayerFragment();
                     mediaPlayerFragment.setVideoUrl(step.getVideoURL());
@@ -154,7 +160,7 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
                 // Handle the single-pane phone case by passing information in a Bundle attached to an Intent
                 // Put this information in a Bundle and attach it to an Intent that will launch an Activity
                 Bundle b = new Bundle();
-                b.putInt(BakingAppConstants.INTENT_NAME_FOR_STEP_ID, mRecipe.getSteps()[currentStep].getId());
+                b.putInt(BakingAppConstants.INTENT_NAME_FOR_STEP_ID, mRecipe.getSteps()[mCurrentStep].getId());
                 Log.d(TAG, "Step passed to RecipeDetailsActivity");
                 b.putParcelable("recipe", mRecipe);
                 // Attach the Bundle to an intent
@@ -188,8 +194,9 @@ public class RecipeActivity extends AppCompatActivity implements MasterListFragm
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(STEP_ID, currentStep);
+        outState.putInt(STEP_ID, mCurrentStep);
         outState.putParcelable(RECIPE, mRecipe);
+        outState.putBoolean(TWO_PANE, mTwoPane);
     }
 
     /**

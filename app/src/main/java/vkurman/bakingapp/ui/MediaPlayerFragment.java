@@ -158,7 +158,7 @@ public class MediaPlayerFragment extends Fragment implements Player.EventListene
         if (mExoPlayer == null) {
             // If starting to play a video or play button is clicked and if in landscape mode
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                if (getActivity() != null) {
+                if (getActivity() != null && getActivity() instanceof RecipeDetailsActivity) {
                     // Hide action and status bar
 //                    View decorView = getActivity().getWindow().getDecorView();
 //                    decorView.setSystemUiVisibility(

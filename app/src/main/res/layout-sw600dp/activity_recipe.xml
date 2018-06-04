@@ -16,6 +16,7 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:orientation="horizontal"
+    android:weightSum="3"
     tools:context="vkurman.bakingapp.ui.RecipeActivity" >
 
     <!--
@@ -26,8 +27,9 @@
     <fragment
         android:id="@+id/master_list_fragment"
         android:name="vkurman.bakingapp.ui.MasterListFragment"
-        android:layout_width="400dp"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
 
     <!-- A small divider -->
     <View
@@ -37,10 +39,11 @@
 
     <!-- LinearLayout that arranges two fragments vertically -->
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/recipe_details_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2">
         <LinearLayout
-            android:id="@+id/recipe_details_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
@@ -55,7 +58,6 @@
             <FrameLayout android:id="@+id/recipe_step_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
