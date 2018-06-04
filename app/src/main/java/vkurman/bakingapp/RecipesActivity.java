@@ -19,6 +19,8 @@ package vkurman.bakingapp;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import vkurman.bakingapp.IdlingResource.RecipeCountingIdlingRecource;
+import vkurman.bakingapp.IdlingResource.SimpleIdlingResource;
 import vkurman.bakingapp.adapters.RecipesAdapter;
 import vkurman.bakingapp.loaders.RecipesLoader;
 import vkurman.bakingapp.models.Recipe;
@@ -58,6 +62,7 @@ public class RecipesActivity extends AppCompatActivity implements
         mAdapter = new RecipesAdapter(this, null, this);
         mRecyclerView.setAdapter(mAdapter);
 
+        RecipeCountingIdlingRecource.increment();
         // Setting loaders
         getSupportLoaderManager().initLoader(0, null, this).forceLoad();
     }
@@ -80,6 +85,7 @@ public class RecipesActivity extends AppCompatActivity implements
         } else {
             mAdapter.updateData(data);
         }
+        RecipeCountingIdlingRecource.decrement();
     }
 
     @Override
@@ -90,6 +96,7 @@ public class RecipesActivity extends AppCompatActivity implements
         if(recipe != null) {
             Intent intent = new Intent(RecipesActivity.this, RecipeActivity.class);
             intent.putExtra("recipe", recipe);
+            intent.putExtra("recipeId", recipe.getId());
             startActivity(intent);
         } else {
             Toast.makeText(this, "Recipe not set!", Toast.LENGTH_SHORT).show();

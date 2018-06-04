@@ -45,6 +45,7 @@ public class RecipesLoader extends AsyncTaskLoader<List<Recipe>> {
     @Override
     public List<Recipe> loadInBackground() {
         URL url = RecipeUtils.createRecipesUrl();
+        Log.d(TAG, url.toString());
 
         if(url == null) {
             return null;
@@ -60,7 +61,7 @@ public class RecipesLoader extends AsyncTaskLoader<List<Recipe>> {
             }
             return recipes;
         } catch (IOException e) {
-            Log.e(TAG, "Exception getting response from web");
+            Log.e(TAG, "Exception getting response from web: " + e);
         }
 
         return null;
